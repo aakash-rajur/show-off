@@ -1,0 +1,79 @@
+{
+  "name": "Dhiraj Sharma",
+  "title": "Lorem ipsum dolor sit",
+  "bio": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque hic, quaerat recusandae sit tempore voluptatem? Aperiam, asperiores consequatur, cum dolor eveniet ex iste magnam omnis porro sed tempora tenetur veniam.",
+  "portfolio": [
+    {
+      "name": "What The Duck | S3E5",
+      "description": "Client: Viu India\nProduction House: Mad Hatter\nDirection: Gabriel Godherao",
+      "video": "https://youtu.be/EIc3B5ljJwc",
+      "coverFile": "/images/the-duck-2.png"
+    },
+    {
+      "name": "Adidas #RunForTheOceans",
+      "description": "Production House: Wide Angle Films\nDirection and Editing: Abhimanyu Tiwari",
+      "video": "https://www.facebook.com/adidasIN/videos/10156379059831354/?t=0",
+      "coverFile": "/images/adidas.png"
+    },
+    {
+      "name": "What The Duck | S3E1",
+      "description": "Client: Viu India\nProduction House: Mad Hatter\nDirection : Gabriel Godherao",
+      "video": "https://youtu.be/Jd423zcEnvo",
+      "coverFile": "/images/the-duck-1.png"
+    },
+    {
+      "name": "The Cycling Story",
+      "description": "Client: Our Better World\nDirection: Anshul Tiwari",
+      "video": "https://www.facebook.com/ourbetterworld.org/videos/10156429199691967/",
+      "coverFile": "/images/cycling.jpg"
+    },
+    {
+      "name": "What The Duck | S3E2",
+      "description": "Client: Viu India\nProduction House: Mad Hatter\nDirection: Gabriel Godherao",
+      "video": "https://www.youtube.com/watch?v=bl8jhn8sxRo&t=231s",
+      "coverFile": "/images/the-duck-2.png"
+    },
+    {
+      "name": "Spread the Love, Pass on the J",
+      "description": "Production House : LEFT HAND RIGHT\nDirection & Editing: Paridhi Surana\nDI & Colorist: Shaurye Chakravarty",
+      "video": "https://youtu.be/qUKW4Oukvh8",
+      "coverFile": "/images/the-j.png"
+    },
+    {
+      "name": "Life-changing Experience of our Alumnus: Dr. Govind Bhimrao Jadhav",
+      "description": "Production House: Ashcharya Films\nDirection: Shreeram Upadhyay\nEditing: Prathamesh Salunkhe",
+      "video": "https://youtu.be/QkCub0S4C3A",
+      "coverFile": "/images/govind-bhimrao.png"
+    },
+    {
+      "name": "#MTVFunAlwaysOn with Rannvijay",
+      "description": "Production House: Black and Yellow\nDirection: Ritwik",
+      "video": "https://www.facebook.com/mtvindia/videos/10155893477210102/?t=5",
+      "coverFile": "/images/mtv-fun.png"
+    },
+    {
+      "name": "The Grand Tour : Amazon Prime Video",
+      "description": "Production House: Mad Hatter Films\nDirection: Gabriel",
+      "video": "https://www.facebook.com/Hoezaay/videos/1611783855575905/",
+      "coverFile": "/images/grand-tour-1.png"
+    },
+    {
+      "name": "The Grand Tour : Amazon Prime Video",
+      "description": "Production House: Mad Hatter Films\nDirection: Gabriel",
+      "video": "https://www.facebook.com/Hoezaay/videos/1623028524451438/",
+      "coverFile": "/images/grand-tour-2.png"
+    },
+    {
+      "name": "Black+Decker Cordless Drill Kit",
+      "description": "Production House: Bandstand Videos\nDirection: Mrinal\nEditing: Terence Fernandes",
+      "video": "https://youtu.be/_dbpUN_G1zk",
+      "coverFile": "/images/black-decker-1.png"
+    },
+    {
+      "name": "Black+Decker Impact Drill Kit",
+      "description": "Production House: Bandstand Videos\nDirection: Mrinal\nEditing: Terence Fernandes",
+      "video": "https://youtu.be/xPuSHN4l-F4",
+      "coverFile": "/images/black-decker-2.png"
+    }
+  ]
+}
