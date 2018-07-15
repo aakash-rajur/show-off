@@ -18,22 +18,25 @@ Animated.propTypes = {
 	className: PropTypes.string,
 	animate: PropTypes.oneOf([FADE_IN, FADE_OUT]),
 	visible: PropTypes.bool,
-	display: PropTypes.string
+	display: PropTypes.string,
+	duration: PropTypes.string
 };
 
 Animated.defaultProps = {
-	display: 'initial'
+	display: 'initial',
+	duration: '0.7s'
 };
 
 class FadeInOut extends Component {
 	static propTypes = {
 		visible: PropTypes.bool,
 		className: PropTypes.string,
-		display: PropTypes.string
+		display: PropTypes.string,
+		duration: PropTypes.string,
 	};
 	
 	static defaultProps = {
-		visible: false
+		visible: false,
 	};
 	
 	constructor(props) {
@@ -58,12 +61,14 @@ class FadeInOut extends Component {
 		let {
 			className,
 			display,
-			children
+			children,
+			duration
 		} = this.props;
 		return (
 			<Animated {...this.state}
 			          className={className}
-			          display={display}>
+			          display={display}
+			          duration={duration}>
 				{children}
 			</Animated>
 		)
