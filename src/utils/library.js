@@ -2,6 +2,8 @@ import firebase from 'firebase/app';
 import {Component} from 'react';
 import {FACEBOOK_ID, PORTFOLIO_REF} from "./config";
 
+export const MIN_TILE_SIZE = 20;
+
 /**
  * filters out args if not string and joins
  * them appropriately

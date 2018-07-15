@@ -34,7 +34,8 @@ export default {
 		alignItems: 'center',
 		boxShadow: '0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)',
 		padding: `0 80px 0 40px`,
-		background: 'white'
+		background: 'white',
+		zIndex: 1
 	},
 	info: {
 		width: 400,
@@ -75,7 +76,7 @@ export default {
 		padding: `30px 40px 30px 80px`
 	},
 	project: {
-	
+		padding: `30px 40px 30px 80px`
 	},
 	'@media (max-width: 1024px)': {
 		infoWrapper: {
@@ -91,6 +92,9 @@ export default {
 			lineHeight: '2.2em'
 		},
 		portfolio: {
+			paddingLeft: '60px'
+		},
+		project: {
 			paddingLeft: '60px'
 		}
 	},
@@ -131,7 +135,7 @@ export default {
 			margin: 0,
 			fontSize: '0.9em'
 		},
-		animationLocation:{
+		animationLocation: {
 			gridRow: '2',
 			gridColumn: '1'
 		},
@@ -140,6 +144,8 @@ export default {
 			width: 'initial',
 		},
 		project: {
+			padding: '30px 20px',
+			width: 'initial',
 		},
 	}
 };

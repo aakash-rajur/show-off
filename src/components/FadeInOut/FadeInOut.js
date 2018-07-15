@@ -33,10 +33,14 @@ class FadeInOut extends Component {
 		className: PropTypes.string,
 		display: PropTypes.string,
 		duration: PropTypes.string,
+		skipEnter: PropTypes.bool,
+		skipExit: PropTypes.bool
 	};
 	
 	static defaultProps = {
 		visible: false,
+		skipEnter: false,
+		skipExit: false
 	};
 	
 	constructor(props) {
@@ -49,9 +53,16 @@ class FadeInOut extends Component {
 	
 	async componentDidUpdate(props) {
 		if (this.props.visible !== props.visible) {
-			let {visible} = this.props,
+			let {
+					skipEnter, skipExit,
+					visible
+				} = this.props,
 				setState = promiseSetState(this);
-			if (visible) return await setState({visible: true, animate: FADE_IN});
+			if (!skipEnter && visible) {
+				await setState({visible: true});
+				return await promiseSetTimeout(setState, 2, {animate: FADE_IN});
+			}
+			if (skipExit) return await setState({animate: FADE_OUT, visible: false});
 			await setState({animate: FADE_OUT});
 			await promiseSetTimeout(setState, 720, {visible: false});
 		}

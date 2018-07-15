@@ -5,6 +5,6 @@ export default {
 	container: {
 		opacity: ({animate}) => animate === FADE_IN ? 1 : 0,
 		display: ({visible, display}) => visible ? display : 'none',
-		transition: ({duration}) => `all ${duration} ease-in-out`
+		transition: ({duration = '0.7s'}) => `all ${duration} ease-in-out`
 	}
 }

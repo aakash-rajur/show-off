@@ -7,7 +7,8 @@ export default {
 		width: '100%',
 		left: 0,
 		top: 0,
-		background: 'white'
+		background: 'white',
+		zIndex: 4
 	},
 	spinner: {
 		width: '40%'

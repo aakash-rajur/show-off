@@ -1,6 +1,7 @@
+import {MIN_TILE_SIZE} from "../../utils/library";
+
 export const ANIMATION_SHRINK = 'shrink';
 export const ANIMATION_GROW = 'grow';
-const MIN_TILE_SIZE = 20;
 
 export const tileStyle = {
 	[`@keyframes ${ANIMATION_SHRINK}`]: {
@@ -143,7 +144,7 @@ export default {
 	},
 	'@media (max-width: 600px)': {
 		container: {
-			gridTemplate: `${MIN_TILE_SIZE}vw/repeat(2, ${MIN_TILE_SIZE * 2}vw)`
+			gridTemplate: `${MIN_TILE_SIZE}vw/repeat(2, ${2 * MIN_TILE_SIZE }vw)`
 		}
 	}
 }
