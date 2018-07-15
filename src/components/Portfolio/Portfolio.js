@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import injectSheet from 'react-jss';
 import {joinClassName} from "../../utils/library";
 import Image from "../Image/Image";
-import style, {ANIMATION_SHRINK, tileStyle} from './style';
+import style, {tileStyle} from './style';
 
 const Tile = injectSheet(tileStyle)(
 	function ({classes, src, alt, dom, onClick}) {
@@ -39,18 +39,19 @@ class Portfolio extends Component {
 		className: PropTypes.string,
 		data: PropTypes.arrayOf(PropTypes.object),
 		onClick: PropTypes.func,
-		getSource: PropTypes.func,
-		getAlt: PropTypes.func,
-		selected: PropTypes.number
+		getTileProps: PropTypes.func,
+		preventScroll: PropTypes.bool
 	};
 	
 	render() {
 		let {
 			classes,
 			className,
+			preventScroll = false
 		} = this.props;
 		return (
-			<div className={joinClassName(classes.container, className)}>
+			<div className={joinClassName(classes.container, className)}
+			     onWheel={e => preventScroll && e.preventDefault()}>
 				{this.renderTiles()}
 			</div>
 		)
@@ -59,17 +60,13 @@ class Portfolio extends Component {
 	renderTiles() {
 		let {
 				data, classes,
-				getSource, getAlt,
-				selected
+				getTileProps
 			} = this.props,
 			tiles = data.map((project, index) => {
-				let tileSelected = selected === index,
-					animation = Number.isInteger(selected) && !tileSelected ?
-						ANIMATION_SHRINK : null;
+				let tileProps = getTileProps ? getTileProps(project, index) : {};
 				return (
-					<Tile key={index} onClick={this.onTileClick(project, index)}
-					      src={getSource && getSource(project)} alt={getAlt && getAlt(project)}
-					      visible={!tileSelected} animation={animation}/>
+					<Tile key={index} {...tileProps}
+					      onClick={this.onTileClick(project, index)}/>
 				);
 			});
 		data.length && tiles.splice(1, 0, <div key='spacer' className={classes.spacer}>&nbsp;</div>);

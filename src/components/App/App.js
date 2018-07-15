@@ -4,6 +4,7 @@ import {getFacebookProfile, getUserData, joinClassName, promiseSetState} from ".
 import Image from "../Image/Image";
 import Loading from "../Loading/Loading";
 import Portfolio from "../Portfolio/Portfolio";
+import {ANIMATION_SHRINK} from "../Portfolio/style";
 import style from './style';
 
 class App extends Component {
@@ -15,6 +16,7 @@ class App extends Component {
 	constructor(props) {
 		super(props);
 		this.onProjectClick = this.onProjectClick.bind(this);
+		this.onGetTileProps = this.onGetTileProps.bind(this);
 	}
 	
 	async componentDidMount() {
@@ -59,15 +61,16 @@ class App extends Component {
 	}
 	
 	renderPortfolio() {
-		let {userData, selected} = this.state;
+		let {userData} = this.state;
 		if (!userData) return null;
-		let {classes} = this.props;
+		let {classes} = this.props,
+			{selected} = this.state;
 		return (
 			<Portfolio
-				data={userData.portfolio}
+				data={userData.portfolio} onClick={this.onProjectClick}
 				className={joinClassName(classes.animationLocation, classes.portfolio)}
-				getSource={({getThumbnail}) => getThumbnail} getAlt={({name}) => name}
-				onClick={this.onProjectClick} selected={selected && selected.index}/>
+				getTileProps={this.onGetTileProps} preventScroll={Boolean(selected)}
+			/>
 		);
 	}
 	
@@ -83,6 +86,21 @@ class App extends Component {
 				index
 			}
 		});
+	}
+	
+	onGetTileProps(project, index) {
+		let {
+				getThumbnail: src, name: alt
+			} = project, {
+				selected
+			} = this.state,
+			visible = !selected || selected.index !== index;
+		return {
+			src, alt,
+			visible,
+			animation: selected && Number.isInteger(selected.index) && visible ?
+				ANIMATION_SHRINK : null
+		};
 	}
 }
 
