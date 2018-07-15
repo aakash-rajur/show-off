@@ -28,9 +28,6 @@ export default {
 		gridTemplate: '1fr/1fr 55%',
 		margin: '0 auto'
 	},
-	portfolio: {
-		padding: `30px 40px 30px 80px`
-	},
 	infoWrapper: {
 		display: 'flex',
 		justifyContent: 'flex-end',
@@ -69,6 +66,16 @@ export default {
 	bio: {
 		lineHeight: '2.5em',
 		color: 'gray'
+	},
+	animationLocation: {
+		gridRow: '1',
+		gridColumn: '2'
+	},
+	portfolio: {
+		padding: `30px 40px 30px 80px`
+	},
+	project: {
+	
 	},
 	'@media (max-width: 1024px)': {
 		infoWrapper: {
@@ -124,9 +131,15 @@ export default {
 			margin: 0,
 			fontSize: '0.9em'
 		},
+		animationLocation:{
+			gridRow: '2',
+			gridColumn: '1'
+		},
 		portfolio: {
 			padding: '30px 20px',
-			width: 'initial'
-		}
+			width: 'initial',
+		},
+		project: {
+		},
 	}
 };

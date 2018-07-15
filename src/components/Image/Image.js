@@ -18,17 +18,16 @@ class Image extends Component {
 		]),
 		alt: PropTypes.string,
 		className: PropTypes.string,
+		cloakClassName: PropTypes.string,
 		containerClassName: PropTypes.string,
-		dom: PropTypes.func
+		dom: PropTypes.func,
+		onClick: PropTypes.func
 	};
 	
-	constructor(props) {
-		super(props);
-		this.state = {
-			imageState: IMAGE_LOAD,
-			src: null
-		};
-	}
+	state = {
+		imageState: IMAGE_LOAD,
+		src: null
+	};
 	
 	async componentDidMount() {
 		let {src} = this.props;
@@ -53,14 +52,18 @@ class Image extends Component {
 		let {
 			classes, alt,
 			className, dom,
-			containerClassName
+			containerClassName,
+			onClick
 		} = this.props, {
 			src, imageState
 		} = this.state;
 		return (
-			<div className={joinClassName(classes.container, containerClassName)}>
+			<div className={joinClassName(classes.container, containerClassName)}
+			     onClick={onClick}>
 				<img src={src} alt={alt} ref={dom}
-				     className={joinClassName(classes.image, imageState !== IMAGE_LOADED && classes.hidden, className)}
+				     className={joinClassName(classes.image,
+					     imageState !== IMAGE_LOADED && classes.hidden,
+					     className)}
 				     onLoad={this.onImageStateChange(IMAGE_LOADED)}
 				     onError={this.onImageStateChange(IMAGE_ERRORED)}/>
 				{this.renderCloak()}
@@ -70,12 +73,12 @@ class Image extends Component {
 	
 	renderCloak() {
 		let {imageState} = this.state,
-			{classes, className, alt} = this.props,
+			{classes, cloakClassName, alt} = this.props,
 			name = imageState === IMAGE_LOAD ? 'image' :
 				imageState === IMAGE_ERRORED ? 'broken_image' :
 					null;
 		return (
-			<FadeInOut className={joinClassName(classes.cloak, className)}
+			<FadeInOut className={joinClassName(cloakClassName, classes.cloak)}
 			           visible={Boolean(name)} display='flex'>
 				<Icon name={name}/>
 				{name && <span>{alt}</span>}
