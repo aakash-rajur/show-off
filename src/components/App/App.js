@@ -153,10 +153,10 @@ class App extends Component {
 				vTop = 508.5 - 9 / 32 * (innerWidth * 0.4);
 			if (innerWidth <= 600) {
 				vLeft = innerWidth * 0.1;
-				vTop = 0.5 * innerWidth * 0.8;
+				vTop = 0.5 * innerWidth * 0.8 + 106;
+			} else if (innerWidth <= 1024) {
+				vLeft = innerWidth * 0.45 + 80;
 			}
-			if (innerWidth <= 1024)
-				vLeft = innerWidth * 0.1;
 			
 			let thumbnail = {
 				width: tWidth, height: tHeight,

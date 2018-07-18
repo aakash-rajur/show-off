@@ -76,7 +76,7 @@ export default {
 		padding: `30px 40px 30px 80px`
 	},
 	project: {
-		padding: `30px 0 30px 80px`
+		padding: `30px 40px 30px 80px`
 	},
 	'@media (max-width: 1024px)': {
 		infoWrapper: {

@@ -1,6 +1,5 @@
 import {MIN_TILE_SIZE} from "../../utils/library";
 
-
 export default {
 	container: {
 		height: '100%',
@@ -30,6 +29,9 @@ export default {
 		right: -36, top: -46,
 		color: 'gray',
 		fontSize: '32px'
+	},
+	'@media (max-width: 1024px)': {
+	
 	},
 	'@media (min-width: 600px) and (max-width: 800px)': {
 		container: {
