@@ -12,8 +12,9 @@ class App extends Component {
 	state = {
 		userData: null,
 		selected: null,
+		portfolioAnimation: null,
+		transitionAnimation: null,
 		showProject: false,
-		portfolioAnimation: null
 	};
 	
 	constructor(props) {
@@ -31,8 +32,6 @@ class App extends Component {
 	render() {
 		let {
 				userData,
-				showProject,
-				selected
 			} = this.state,
 			{classes} = this.props;
 		return (
@@ -40,12 +39,7 @@ class App extends Component {
 				<div className={classes.app}>
 					{this.renderInfo()}
 					{this.renderPortfolio()}
-					<Project
-						className={joinClassName(classes.animationLocation, classes.project)}
-						visible={showProject} url={selected && selected.project.video}
-						thumbnail={selected && selected.project.coverFile}
-						alt={selected && selected.project.name}
-						onProjectClose={this.onProjectClose}/>
+					{this.renderProject()}
 				</div>
 				<Loading visible={!Boolean(userData)}/>
 			</Fragment>
@@ -87,17 +81,21 @@ class App extends Component {
 		);
 	}
 	
-	async onProjectClick({event: {target}, project, index}) {
-		let setState = promiseSetState(this);
-		await setState({
-			selected: {
-				project,
-				target,
-				index
-			},
-			portfolioAnimation: ANIMATION_SHRINK
-		});
-		await promiseSetTimeout(setState, 700, {showProject: true});
+	renderProject() {
+		let {
+				showProject,
+				selected
+			} = this.state,
+			{classes} = this.props;
+		return (
+			<Project
+				className={joinClassName(classes.animationLocation, classes.project)}
+				visible={showProject} url={selected && selected.project.video}
+				thumbnail={selected && selected.project.coverFile}
+				alt={selected && selected.project.name}
+				onProjectClose={this.onProjectClose}
+				getAnimationChain={this.generateAnimationChain(selected)}/>
+		)
 	}
 	
 	onGetTileProps(project, index) {
@@ -115,12 +113,69 @@ class App extends Component {
 		};
 	}
 	
+	async onProjectClick({event: {target}, project, index}) {
+		let setState = promiseSetState(this);
+		await setState({
+			selected: {
+				project,
+				target: target.getBoundingClientRect(),
+				index
+			}
+		});
+		await setState({
+			showProject: true,
+			portfolioAnimation: ANIMATION_SHRINK,
+		});
+	}
+	
 	async onProjectClose() {
 		let setState = promiseSetState(this);
-		await setState({showProject: false, portfolioAnimation: ANIMATION_GROW});
-		await promiseSetTimeout(setState, 720, {selected: null, portfolioAnimation: null});
+		await setState({
+			portfolioAnimation: ANIMATION_GROW
+		});
+		await promiseSetTimeout(setState, 650, {
+			selected: null,
+			showProject: false,
+			portfolioAnimation: null,
+		});
+	}
+	
+	generateAnimationChain(selected) {
+		if (!selected) return null;
+		return backward => {
+			let {
+					top: tTop, left: tLeft,
+					width: tWidth, height: tHeight
+				} = selected.target,
+				
+				{innerWidth} = window,
+				vLeft = innerWidth * 0.45 + 80,
+				vTop = 508.5 - 9 / 32 * (innerWidth * 0.4);
+			if (innerWidth <= 600) {
+				vLeft = innerWidth * 0.1;
+				vTop = 0.5 * innerWidth * 0.8;
+			}
+			if (innerWidth <= 1024)
+				vLeft = innerWidth * 0.1;
+			
+			let thumbnail = {
+				width: tWidth, height: tHeight,
+				transform: `translate(${tLeft - vLeft}px, ${tTop - vTop}px)`,
+				borderRadius: '50%'
+			}, video = {
+				width: '100%', height: '100%',
+				transform: 'initial',
+				borderRadius: 'initial'
+			};
+			
+			return {
+				start: backward ? video : thumbnail,
+				end: backward ? thumbnail : video
+			}
+		}
 	}
 }
 
 export default injectSheet(style)(App);
 //'https://picsum.photos/200/300/?random'
+//2*window.innerWidth * 0.2 + 16 + 120

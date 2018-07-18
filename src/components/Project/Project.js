@@ -2,7 +2,8 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import injectSheet from 'react-jss';
 import ReactPlayer from 'react-player';
-import {joinClassName, promiseSetState} from "../../utils/library";
+import {joinClassName, promiseSetState, promiseSetTimeout} from "../../utils/library";
+import AnimatedThumbnail from "../AnimatedThumbnail/AnimatedThumbnail";
 import FadeInOut from "../FadeInOut/FadeInOut";
 import Icon from "../Icon/Icon";
 import style from './style';
@@ -20,7 +21,8 @@ class Project extends Component {
 			PropTypes.string
 		]),
 		alt: PropTypes.string,
-		onProjectClose: PropTypes.func
+		onProjectClose: PropTypes.func,
+		getAnimationChain: PropTypes.func
 	};
 	
 	static defaultProps = {
@@ -33,17 +35,37 @@ class Project extends Component {
 		this.onPlayerReady = this.onPlayerReady.bind(this);
 		this.onProjectClose = this.onProjectClose.bind(this);
 		this.state = {
-			ready: false,
 			play: false,
-			url: props.url
+			url: props.url,
+			showPlayer: false,
+			animate: false,
+			style: null,
+			opacity: 0
 		};
 	}
 	
 	async componentDidUpdate(props) {
+		let setState = promiseSetState(this), {
+			visible, getAnimationChain
+		} = this.props;
 		if (this.props.url !== props.url) {
-			let setState = promiseSetState(this);
-			await setState({ready: false});
-			await setState({url: this.props.url});
+			await setState({animate: true});
+			await promiseSetTimeout(setState, 50, {
+				url: this.props.url,
+				showPlayer: false,
+				opacity: 1
+			});
+		}
+		if (visible !== props.visible && visible && getAnimationChain) {
+			let {start, end} = getAnimationChain(false);
+			await setState({
+				animate: true,
+				style: start,
+				opacity: 1
+			});
+			await promiseSetTimeout(setState, 100, {
+				style: end
+			});
 		}
 	}
 	
@@ -51,17 +73,14 @@ class Project extends Component {
 		let {
 			classes, className,
 			thumbnail, alt,
-			visible
+			visible,
 		} = this.props, {
-			url, ready,
-			play
+			url, play, showPlayer,
+			animate, style, opacity
 		} = this.state;
-		if (!url) return null;
+		if (!url || !visible) return null;
 		return (
-			<FadeInOut
-				className={joinClassName(classes.container, className)}
-				display='grid' visible={visible} duration='0.3s'
-				skipExit={true}>
+			<div className={joinClassName(classes.container, className)}>
 				<div className={classes.videoWrapper}>
 					<ReactPlayer
 						width='100%' height='100%'
@@ -69,20 +88,27 @@ class Project extends Component {
 						onPlay={this.onPlayerChange(PLAYER_PLAY)}
 						onPause={this.onPlayerChange(PLAYER_PAUSE)}
 						onReady={this.onPlayerReady}
-					/>
-					<FadeInOut className={classes.fadingImage}
-					           visible={!ready} duration='0.3s'>
-						<img src={thumbnail} alt={alt}/>
+						style={{visibility: showPlayer ? 'initial' : 'hidden'}}/>
+					<AnimatedThumbnail
+						src={thumbnail} alt={alt} animate={animate}
+						style={style} opacity={opacity}/>
+					<FadeInOut
+						display='inline' visible={!animate}
+						duration='0.3s' className={classes.close}>
+						<Icon name='close' onClick={this.onProjectClose}/>
 					</FadeInOut>
-					<Icon className={classes.close} name='close'
-					      onClick={this.onProjectClose}/>
 				</div>
-			</FadeInOut>
+			</div>
 		)
 	}
 	
-	onPlayerReady() {
-		this.setState({ready: true, play: true});
+	async onPlayerReady() {
+		let setState = promiseSetState(this);
+		await setState({opacity: 0, showPlayer: true});
+		await promiseSetTimeout(setState, 320, {
+			animate: false,
+			play: true
+		});
 	}
 	
 	onPlayerChange(state) {
@@ -91,10 +117,21 @@ class Project extends Component {
 	
 	async onProjectClose() {
 		let setState = promiseSetState(this), {
-			onProjectClose
+			getAnimationChain, onProjectClose
 		} = this.props;
 		await setState({play: false});
-		onProjectClose && onProjectClose();
+		if (getAnimationChain) {
+			let {start, end} = getAnimationChain(true);
+			await setState({
+				animate: true,
+				style: start,
+				opacity: 1,
+				showPlayer: false
+			});
+			onProjectClose && onProjectClose();
+			await promiseSetTimeout(setState, 50, {style: end});
+			await promiseSetTimeout(setState, 650, {animate: false});
+		}
 	}
 }
 

@@ -1,38 +1,33 @@
 import {MIN_TILE_SIZE} from "../../utils/library";
 
+
 export default {
 	container: {
 		height: '100%',
-		background: 'white',
+		display: 'grid',
 		gridTemplate: `1fr/${2 * MIN_TILE_SIZE}vw`
+	},
+	aspectRatio: {
+		height: '100%',
+		width: '100%',
+		position: 'absolute',
+		top: 0, left: 0
 	},
 	videoWrapper: {
 		position: 'relative',
-		background: 'gray',
 		height: 0,
 		paddingTop: `${9 / 16 * 100}%`,
 		alignSelf: 'center',
-		'& > div': {
-			position: 'absolute',
-			top: 0, left: 0
-		}
-	},
-	fadingImage: {
-		position: 'absolute',
-		top: 0, left: 0,
-		height: '100%',
-		width: '100%',
-		'& > img': {
-			width: '100%',
-			height: '100%'
+		'& > div:first-child': {
+			extend: 'aspectRatio',
+			boxShadow: '0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)',
 		}
 	},
 	close: {
 		position: 'absolute',
 		cursor: 'pointer',
-		background: 'white',
-		padding: 12, right: -20,
-		top: `calc(-${32 + 2 * 12 + 8}px)`,
+		padding: 12,
+		right: -36, top: -46,
 		color: 'gray',
 		fontSize: '32px'
 	},

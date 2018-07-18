@@ -43,7 +43,7 @@ export const tileStyle = {
 	},
 	animation: {
 		display: ({visible}) => visible ? 'initial' : 'none',
-		animation: ({animation}) => animation && `${animation} 0.3s both ease-in-out`,
+		animation: ({animation}) => animation && `${animation} 0.5s both ease-in-out`,
 		transition: 'box-shadow 0.3s cubic-bezier(.25,.8,.25,1)',
 		boxShadow: '0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)',
 		'&:hover': {
