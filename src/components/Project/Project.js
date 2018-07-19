@@ -20,6 +20,7 @@ class Project extends Component {
 			PropTypes.func,
 			PropTypes.string
 		]),
+		description: PropTypes.string,
 		alt: PropTypes.string,
 		onProjectClose: PropTypes.func,
 		getAnimationChain: PropTypes.func
@@ -73,7 +74,7 @@ class Project extends Component {
 		let {
 			classes, className,
 			thumbnail, alt,
-			visible,
+			visible, description
 		} = this.props, {
 			url, play, showPlayer,
 			animate, style, opacity
@@ -98,6 +99,10 @@ class Project extends Component {
 						<Icon name='close' onClick={this.onProjectClose}/>
 					</FadeInOut>
 				</div>
+				<FadeInOut visible={!animate} duration='0.3s'
+				           className={classes.description}>
+					<pre>{description}</pre>
+				</FadeInOut>
 			</div>
 		)
 	}

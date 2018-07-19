@@ -2,9 +2,10 @@ import {MIN_TILE_SIZE} from "../../utils/library";
 
 export default {
 	container: {
-		height: '100%',
+		height: '100vh',
 		display: 'grid',
-		gridTemplate: `1fr/${2 * MIN_TILE_SIZE}vw`
+		gridTemplate: `1fr/${2 * MIN_TILE_SIZE}vw`,
+		boxSizing: 'border-box'
 	},
 	aspectRatio: {
 		height: '100%',
@@ -30,8 +31,18 @@ export default {
 		color: 'gray',
 		fontSize: '32px'
 	},
-	'@media (max-width: 1024px)': {
-	
+	description: {
+		display: 'none',
+		gridRow: '1',
+		gridColumn: '1',
+		alignSelf: 'end',
+		color: 'gray',
+		'& pre': {
+			margin: 0,
+			fontSize: '1.2em',
+			lineHeight: '2em',
+			textAlign: 'end'
+		}
 	},
 	'@media (min-width: 600px) and (max-width: 800px)': {
 		container: {
@@ -41,11 +52,17 @@ export default {
 	'@media (max-width: 600px)': {
 		container: {
 			gridTemplate: `1fr/${4 * MIN_TILE_SIZE}vw`,
-			justifyContent: 'center'
+			justifyContent: 'center',
+			height: 'calc(100vh - 76px)'
 		},
 		videoWrapper: {
 			alignSelf: 'initial',
-			marginTop: '50%'
+			marginTop: '50%',
+			gridRow: '1',
+			gridColumn: '1',
+		},
+		description: {
+			display: 'initial'
 		}
 	}
 }

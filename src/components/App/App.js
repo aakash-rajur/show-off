@@ -86,15 +86,19 @@ class App extends Component {
 				showProject,
 				selected
 			} = this.state,
-			{classes} = this.props;
+			{classes} = this.props,
+			projectProps = {
+				url: selected && selected.project.video,
+				thumbnail: selected && selected.project.coverFile,
+				alt: selected && selected.project.name,
+				description: selected && selected.project.description
+			};
 		return (
 			<Project
 				className={joinClassName(classes.animationLocation, classes.project)}
-				visible={showProject} url={selected && selected.project.video}
-				thumbnail={selected && selected.project.coverFile}
-				alt={selected && selected.project.name}
-				onProjectClose={this.onProjectClose}
-				getAnimationChain={this.generateAnimationChain(selected)}/>
+				visible={showProject} onProjectClose={this.onProjectClose}
+				getAnimationChain={this.generateAnimationChain(selected)}
+				{...projectProps}/>
 		)
 	}
 	
@@ -150,7 +154,7 @@ class App extends Component {
 				
 				{innerWidth} = window,
 				vLeft = innerWidth * 0.45 + 80,
-				vTop = 508.5 - 9 / 32 * (innerWidth * 0.4);
+				vTop = 478.5 - 9 / 32 * (innerWidth * 0.4);
 			if (innerWidth <= 600) {
 				vLeft = innerWidth * 0.1;
 				vTop = 0.5 * innerWidth * 0.8 + 106;
