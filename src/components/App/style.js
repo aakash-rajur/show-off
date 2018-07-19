@@ -118,15 +118,22 @@ export default {
 			width: '100%',
 			height: 'initial',
 			display: 'grid',
-			gridTemplate: 'repeat(2, auto)/auto 1fr',
+			gridTemplate: 'auto/auto 1fr',
 			gridGap: '4px 16px',
-			'& > h2': {
-				alignSelf: 'end'
+			'& > div:nth-child(2) > div:first-child': {
+				display: 'grid',
+				gridTemplate: 'repeat(2,auto)/1fr',
+				gridGap: '4px',
+				alignContent: 'center'
+			},
+			'& > div:nth-child(2) > div:last-child': {
+				display: 'grid',
+				gridTemplate: 'auto/1fr',
+				alignContent: 'center'
 			}
 		},
 		profileContainer: {
 			marginBottom: 'initial',
-			gridRow: 'span 2',
 			width: '52px',
 			height: '52px',
 			alignSelf: 'center'

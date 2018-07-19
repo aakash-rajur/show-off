@@ -6,6 +6,8 @@ import Loading from "../Loading/Loading";
 import Portfolio from "../Portfolio/Portfolio";
 import {ANIMATION_GROW, ANIMATION_SHRINK} from "../Portfolio/style";
 import Project from "../Project/Project";
+import {TEXT_FIRST, TEXT_SECOND} from "../TextFlip/style";
+import TextFlip from "../TextFlip/TextFlip";
 import style from './style';
 
 class App extends Component {
@@ -15,6 +17,7 @@ class App extends Component {
 		portfolioAnimation: null,
 		transitionAnimation: null,
 		showProject: false,
+		info: TEXT_FIRST
 	};
 	
 	constructor(props) {
@@ -52,16 +55,31 @@ class App extends Component {
 		let {classes} = this.props, {
 			name, title,
 			bio
-		} = userData;
+		} = userData, {
+			selected,
+			info
+		} = this.state;
 		return (
 			<div className={classes.infoWrapper}>
 				<div className={classes.info}>
 					<Image src={getFacebookProfile} className={classes.profile}
 					       alt={name} containerClassName={classes.profileContainer}/>
-					<h2 className={classes.emphasis}>{title}</h2>
-					<h1 className={classes.emphasis}>{name}</h1>
+					<TextFlip current={info} vector={'1.5em'}
+					          renderFirst={(
+						          <Fragment>
+							          <h2 className={classes.emphasis}>{title}</h2>
+							          <h1 className={classes.emphasis}>{name}</h1>
+						          </Fragment>
+					          )}
+					          renderSecond={selected ? (
+						          <h1 className={classes.emphasis}>
+							          {selected.project.name}
+						          </h1>
+					          ) : "\u00a0"}/>
 					<div className={classes.decoration}>&nbsp;</div>
-					<div className={classes.bio}>{bio}</div>
+					<TextFlip className={classes.bio} current={info} renderFirst={bio}
+					          renderSecond={selected ? selected.project.description : "\u00a0"}
+					          vector={'1.5em'}/>
 				</div>
 			</div>
 		)
@@ -129,13 +147,15 @@ class App extends Component {
 		await setState({
 			showProject: true,
 			portfolioAnimation: ANIMATION_SHRINK,
+			info: TEXT_SECOND
 		});
 	}
 	
 	async onProjectClose() {
 		let setState = promiseSetState(this);
 		await setState({
-			portfolioAnimation: ANIMATION_GROW
+			portfolioAnimation: ANIMATION_GROW,
+			info: TEXT_FIRST
 		});
 		await promiseSetTimeout(setState, 650, {
 			selected: null,
