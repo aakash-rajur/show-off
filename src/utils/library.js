@@ -24,7 +24,7 @@ export function promiseSetState(context) {
 	if (!(context instanceof Component))
 		throw new Error('not a react class context');
 	/**
-	 * @param newState: new partial state of the component
+	 * @param newState: new partial state of the Component
 	 * @return {Promise<any>} a promise that resolves after
 	 * the state has been successfully mutated
 	 */

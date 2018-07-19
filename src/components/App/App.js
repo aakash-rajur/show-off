@@ -201,5 +201,5 @@ class App extends Component {
 }
 
 export default injectSheet(style)(App);
-//'https://picsum.photos/200/300/?random'
+//https://picsum.photos/1920/1080/?random
 //2*window.innerWidth * 0.2 + 16 + 120
