@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import injectSheet from 'react-jss';
 import {arrayMove} from 'react-sortable-hoc';
+import Icon from "../Icon/Icon";
 import Input from "../Input/Input";
 import Sortable from "../Sortable/Sortable";
 import style from "./style";
@@ -15,7 +16,10 @@ class Edit extends Component {
 	constructor(props) {
 		super(props);
 		this.onSortEnd = this.onSortEnd.bind(this);
+		this.onAdd = this.onAdd.bind(this);
 		this.onEdit = this.onEdit.bind(this);
+		this.onDelete = this.onDelete.bind(this);
+		this.onReset = this.onReset.bind(this);
 		this.state = {
 			data: JSON.parse(JSON.stringify(props.data))
 		};
@@ -47,11 +51,14 @@ class Edit extends Component {
 					<h1>Projects</h1>
 					<Sortable data={portfolio} className={classes.list}
 					          itemClassName={classes.project} lockAxis='y'
-					          onSortEnd={this.onSortEnd} onEdit={this.onEdit}
-					          useDragHandle={true}/>
+					          useDragHandle={true} onSortEnd={this.onSortEnd}
+					          onEdit={this.onEdit} onDelete={this.onDelete}/>
+					<Icon name='add' className={classes.add}
+					      onClick={this.onAdd}/>
 				</section>
 				<div className={classes.action}>
-					<button className={classes.reset}>
+					<button className={classes.reset}
+					        onClick={this.onReset}>
 						Reset
 					</button>
 					<button className={classes.save}>
@@ -76,8 +83,23 @@ class Edit extends Component {
 		this.setState({data});
 	}
 	
+	onAdd() {
+		alert('add new project');
+	}
+	
 	onEdit(index) {
-		console.log(index);
+		alert(`edit ${index}`);
+	}
+	
+	onDelete(index) {
+		let {data} = this.state;
+		data.portfolio.splice(index, 1);
+		this.setState({data});
+	}
+	
+	onReset() {
+		let {data} = this.props;
+		this.setState({data: JSON.parse(JSON.stringify(data))});
 	}
 }
 

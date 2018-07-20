@@ -4,21 +4,22 @@ import {SortableContainer, SortableElement, SortableHandle} from "react-sortable
 import Icon from "../Icon/Icon";
 import Image from "../Image/Image";
 
-const DragHandle = SortableHandle(() => <Icon name='drag_handle'/>);
+const DragHandle = SortableHandle(() => <Icon name='drag_handle' className='drag'/>);
 
 const ProjectItem = SortableElement(props => {
 	let {
 		className,
 		name, coverFile,
 		description,
-		onEdit
+		onEdit, onDelete
 	} = props;
 	return (
 		<li className={className}>
 			<Image src={coverFile} alt={name}/>
 			<div>{name}</div>
 			<pre>{description}</pre>
-			<Icon name='edit' onClick={onEdit}/>
+			<Icon name='delete' onClick={onDelete} className='delete'/>
+			<Icon name='edit' onClick={onEdit} className='edit'/>
 			<DragHandle/>
 		</li>
 	);
@@ -28,7 +29,8 @@ ProjectItem.propTypes = {
 	className: PropTypes.string,
 	name: PropTypes.string,
 	getThumbnail: PropTypes.func,
-	onEdit: PropTypes.func
+	onEdit: PropTypes.func,
+	onDelete: PropTypes.func
 };
 
 const Sortable = SortableContainer(props => {
@@ -36,17 +38,24 @@ const Sortable = SortableContainer(props => {
 			data,
 			className,
 			itemClassName,
-			onEdit
+			onEdit, onDelete,
+			children
 		} = props,
 		onItemEdit = index =>
-			() => onEdit && onEdit(index);
+			() => onEdit && onEdit(index),
+		onDeleteItem = index =>
+			() => onDelete && onDelete(index);
 	return (
 		<ul className={className}>
-			{data.map((project, index) =>
-				<ProjectItem
-					{...project} className={itemClassName}
-					key={index} index={index}
-					onEdit={onItemEdit(index)}/>)}
+			{data.map(
+				(project, index) =>
+					<ProjectItem
+						{...project} className={itemClassName}
+						key={index} index={index}
+						onEdit={onItemEdit(index)}
+						onDelete={onDeleteItem(index)}/>
+			)}
+			{children}
 		</ul>
 	);
 });
@@ -56,7 +65,8 @@ Sortable.propTypes = {
 	data: PropTypes.array,
 	itemClassName: PropTypes.string,
 	onSortEnd: PropTypes.func,
-	onEdit: PropTypes.func
+	onEdit: PropTypes.func,
+	onDelete: PropTypes.func
 };
 
 export default Sortable;

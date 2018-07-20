@@ -42,13 +42,23 @@ export default {
 		extend: 'section',
 		display: 'grid',
 		gridTemplate: 'auto 1fr/1fr',
-		overflow: 'hidden'
+		overflow: 'hidden',
+		position: 'relative'
 	},
 	list: {
 		listStyle: 'none',
-		padding: '0 0 20px',
+		padding: '0 8px 20px',
 		margin: 'initial',
-		overflow: 'auto',
+		overflow: 'auto'
+	},
+	pronounced: {
+		width: 36, height: 36,
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+		border: '1px solid lightgray',
+		borderRadius: '4px',
+		boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
 	},
 	project: {
 		background: 'white',
@@ -56,7 +66,7 @@ export default {
 		borderRadius: '4px',
 		boxShadow: '0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)',
 		display: 'grid',
-		gridTemplate: 'auto 1fr/auto 1fr',
+		gridTemplate: 'auto 1fr/auto 1fr repeat(3, auto)',
 		gridGap: '8px 16px',
 		'& div:first-child': {
 			width: 100,
@@ -74,15 +84,36 @@ export default {
 		'& span': {
 			gridRow: '1/span 2',
 			alignSelf: 'center',
-		},
-		'& :nth-child(4)': {
-			gridColumn: '3',
 			cursor: 'pointer'
 		},
-		'& :nth-child(5)': {
+		'& .delete': {
+			gridColumn: '3',
+			color: '#dc3545',
+			extend: 'pronounced'
+		},
+		'& .edit': {
 			gridColumn: '4',
-			cursor: 'move'
+			color: '#007bff',
+			extend: 'pronounced'
+		},
+		'& .drag': {
+			gridColumn: '5',
+			cursor: 'move',
+			color: '#343a40'
 		}
+	},
+	add: {
+		width: 56, height: 56,
+		borderRadius: '50%',
+		color: 'white',
+		background: '#17a2b8',
+		boxShadow: '0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)',
+		position: 'absolute',
+		right: 10, bottom: 10,
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+		cursor: 'pointer'
 	},
 	action: {
 		justifySelf: 'end',
