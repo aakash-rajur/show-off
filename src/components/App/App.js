@@ -78,7 +78,9 @@ class App extends Component {
 					          ) : "\u00a0"}/>
 					<div className={classes.decoration}>&nbsp;</div>
 					<TextFlip className={classes.bio} current={info} renderFirst={bio}
-					          renderSecond={selected ? selected.project.description : "\u00a0"}
+					          renderSecond={selected ? (
+						          <pre>{selected.project.description}</pre>
+					          ) : "\u00a0"}
 					          vector={'1.5em'}/>
 				</div>
 			</div>
