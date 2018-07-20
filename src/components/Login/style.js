@@ -38,7 +38,7 @@ export default {
 		},
 		'& button[disabled], & button:disabled': {
 			opacity: 0.5,
-			cursor: 'not-allowed'
+			cursor: 'progress'
 		},
 		'& span': {
 			color: 'red',

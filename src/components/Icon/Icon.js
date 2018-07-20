@@ -10,7 +10,7 @@ function Icon({classes, name, className, ...rest}) {
 	return (
 		<span className={joinClassName('material-icons', className)} {...rest}>
 			{name}
-			</span>
+		</span>
 	)
 }
 

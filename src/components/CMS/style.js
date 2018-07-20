@@ -9,8 +9,10 @@ export default {
 			fontFamily: `'Open Sans', sans-serif`
 		},
 		'body': {
-			height: '100%',
+			height: '100vh',
+			maxHeight: '100vh',
 			margin: 0,
+			overflow: 'hidden',
 			'& #root': {
 				height: '100%'
 			}
@@ -20,14 +22,20 @@ export default {
 			height: 0
 		}
 	},
-	background: {
+	backgroundPosition: {
 		height: '110%',
 		width: '110%',
 		position: 'absolute',
 		left: '-5%', top: '-5%',
-		objectFit: 'cover',
-		filter: 'blur(4px)',
+	},
+	backgroundCloak: {
 		background: '#2b2b2b',
+		'& > *': {
+			display: 'none'
+		}
+	},
+	backgroundImage: {
+		objectFit: 'cover',
 		transition: 'all 0.3s'
 	},
 	backgroundSuccess: {

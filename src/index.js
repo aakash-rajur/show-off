@@ -19,7 +19,7 @@ async function main() {
 			<BrowserRouter>
 				<Switch>
 					<Route exact path={CMS_URL} component={() =>
-						<AsyncComponent getComponent={() => import('./admin/CMS/CMS')}/>}/>
+						<AsyncComponent getComponent={() => import('./components/CMS/CMS')}/>}/>
 					<Route exact path={ROOT_URL} component={App}/>
 					<Route path='*' component={() => <Redirect to={ROOT_URL}/>}/>
 				</Switch>
