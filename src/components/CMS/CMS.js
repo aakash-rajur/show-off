@@ -25,7 +25,7 @@ class CMS extends Component {
 		this.editSubmit = this.editSubmit.bind(this);
 	}
 	
-	componentDidMount() {
+	async componentDidMount() {
 		this.setState({
 			renderComponent: () => {
 				let {
@@ -35,6 +35,24 @@ class CMS extends Component {
 				return <Login onSubmit={this.loginSubmit} error={error} disabled={submitting}/>
 			}
 		});
+		/*let setState = promiseSetState(this),
+			data = await getUserData(),
+			{portfolio} = data;
+		data.portfolio = await Promise.all(portfolio.map(async project => {
+			await project.getThumbnail();
+			return project;
+		}));
+		await setState({
+			data, loading: false
+		});
+		await setState({
+			renderComponent: () => {
+				let {
+					data
+				} = this.state;
+				return <Edit data={data} onSubmit={this.editSubmit}/>
+			}
+		})*/
 	}
 	
 	render() {
@@ -58,6 +76,8 @@ class CMS extends Component {
 	
 	async loginSubmit(e) {
 		e.preventDefault();
+		let {submitting} = this.state;
+		if (submitting) return;
 		let {target} = e,
 			email = target[0].value,
 			password = target[1].value,

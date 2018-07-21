@@ -10,7 +10,7 @@ function Input(props) {
 		className,
 		id, name,
 		children,
-		lines,
+		lines, type,
 		placeholder,
 		...rest
 	} = props;
@@ -21,7 +21,8 @@ function Input(props) {
 			{lines > 1 ? (
 				<textarea id={id || name} name={name} rows={lines}
 				          placeholder={placeholder} {...rest}/>
-			) : <input id={id || name} name={name} placeholder={placeholder} {...rest}/>}
+			) : <input id={id || name} name={name} placeholder={placeholder}
+			           type={type} {...rest}/>}
 			{children}
 		</label>
 	)
@@ -34,7 +35,8 @@ Input.propTypes = {
 };
 
 Input.defaultProps = {
-	lines: 1
+	lines: 1,
+	type: 'text'
 };
 
 export default injectSheet(style)(Input);

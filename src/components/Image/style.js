@@ -20,6 +20,7 @@ export default {
 		extend: 'overlap',
 		flexDirection: 'column',
 		justifyContent: 'center',
+		alignItems:'center',
 		background: 'white',
 		'& span': {
 			textAlign: 'center'

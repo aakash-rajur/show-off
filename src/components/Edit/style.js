@@ -1,14 +1,5 @@
 export default {
-	container: {
-		height: '100%',
-		width: '100%',
-		top: 0, left: 0,
-		position: 'absolute',
-		display: 'grid',
-		gridTemplate: 'auto 1fr 60px/1fr',
-		gridGap: '16px',
-		padding: 16,
-		boxSizing: 'border-box',
+	modernButton: {
 		'& button': {
 			border: 'none',
 			padding: '0.75em 1.25em',
@@ -21,6 +12,18 @@ export default {
 			opacity: 0.5,
 			cursor: 'not-allowed'
 		},
+	},
+	container: {
+		extend: 'modernButton',
+		height: '100%',
+		width: '100%',
+		top: 0, left: 0,
+		position: 'absolute',
+		display: 'grid',
+		gridTemplate: 'auto 1fr 60px/1fr',
+		gridGap: '16px',
+		padding: 16,
+		boxSizing: 'border-box',
 	},
 	section: {},
 	personal: {
@@ -127,5 +130,97 @@ export default {
 		background: '#6c757d',
 		color: 'white',
 		marginRight: '10px'
+	},
+	modal: {
+		height: '100%', width: '100%',
+		position: 'fixed',
+		left: 0, right: 0,
+		background: 'rgba(0, 0, 0, 0.75)',
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	content: {
+		background: 'white',
+		borderRadius: '4px',
+		textAlign: 'end',
+		extend: 'modernButton',
+		paddingBottom: 16
+	},
+	inputContainer: {
+		display: 'grid',
+		gridTemplate: 'auto 1fr/repeat(3, auto)',
+		gridGap: '16px',
+		padding: 16
+	},
+	title: {
+		gridColumn: 'span 3',
+		margin: 0,
+		fontWeight: 'normal',
+		background: '#343a40',
+		color: 'white',
+		padding: 16,
+		borderRadius: '2px 2px 0 0',
+		textAlign: 'initial'
+	},
+	inputStyle: {
+		gridTemplate: 'auto/80px 1fr',
+		fontSize: '0.8em'
+	},
+	video: {
+		extend: 'inputStyle',
+		gridRow: 'span 2',
+		'& > div, & > span.material-icons': {
+			gridColumn: 'span 2',
+			height: '20vh'
+		},
+		'& span.material-icons': {
+			display: 'flex',
+			justifyContent: 'center',
+			border: '1px solid lightgray',
+			borderRadius: '4px'
+		}
+	},
+	coverFile: {
+		extend: 'inputStyle',
+		gridRow: 'span 2',
+		gridTemplate: 'auto 1fr/1fr',
+		'& > span': {
+			padding: '0.75em 1em',
+			border: '1px solid lightgray',
+			borderRadius: '4px',
+			gridRow: '1',
+			gridColumn: '1',
+			zIndex: 2,
+			background: 'white'
+		},
+		'& > input': {
+			gridRow: '1',
+			gridColumn: '1',
+			zIndex: 1
+		},
+		'& > div': {
+			height: '20vh',
+			width: '28vh',
+			'& > div': {
+				border: '1px solid lightgray',
+				borderRadius: '4px'
+			}
+		}
+	},
+	textInputStyle: {
+		fontSize: '0.8em',
+		gridTemplate: 'auto 1fr/1fr'
+	},
+	name: {
+		extend: 'textInputStyle',
+	},
+	description: {
+		extend: 'textInputStyle',
+		'& > textarea': {
+			resize: 'none'
+		}
+	},
+	actionButton: {
+		marginRight: 16
 	}
 }

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import injectSheet from 'react-jss';
-import {joinClassName, promiseSetState} from "../../utils/library";
+import {getThumbnailFromFile, joinClassName, promiseSetState} from "../../utils/library";
 import FadeInOut from "../FadeInOut/FadeInOut";
 import Icon from "../Icon/Icon";
 import style from './style';
@@ -41,10 +41,15 @@ class Image extends Component {
 		if (this.props.src !== props.src) {
 			let {src} = this.props,
 				setState = promiseSetState(this);
-			if (typeof src === 'string')
+			console.log(typeof src);
+			if (typeof src === 'string' || src === null)
 				return await setState({src: this.props.src, imageState: IMAGE_LOAD});
-			await setState({imageState: IMAGE_LOAD});
-			await setState({src: await src()});
+			else if (src instanceof File)
+				return await setState({src: await getThumbnailFromFile(src), imageState: IMAGE_LOAD});
+			else if (src instanceof Function) {
+				await setState({imageState: IMAGE_LOAD});
+				await setState({src: await src()});
+			}
 		}
 	}
 	
@@ -89,7 +94,7 @@ class Image extends Component {
 	onImageStateChange(imageState) {
 		return () => {
 			let {src} = this.state;
-			if (src === '') imageState = IMAGE_LOAD;
+			if (src === '' || src === null) imageState = IMAGE_LOAD;
 			this.setState({imageState});
 		}
 	}

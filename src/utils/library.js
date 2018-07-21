@@ -79,3 +79,12 @@ export async function getUserData() {
 	});
 	return data;
 }
+
+export function getThumbnailFromFile(file) {
+	return new Promise((resolve, reject) => {
+		let reader = new FileReader();
+		reader.onload = ({target: {result}}) => resolve(result);
+		reader.onerror = error => reject(error);
+		reader.readAsDataURL(file);
+	});
+}
