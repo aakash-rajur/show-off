@@ -14,7 +14,8 @@ class Image extends Component {
 	static propTypes = {
 		src: PropTypes.oneOfType([
 			PropTypes.string,
-			PropTypes.func
+			PropTypes.func,
+			PropTypes.object,
 		]),
 		alt: PropTypes.string,
 		className: PropTypes.string,
@@ -32,8 +33,9 @@ class Image extends Component {
 	async componentDidMount() {
 		let {src} = this.props;
 		this.setState({
-			src: src instanceof Function ?
-				await src() : src
+			src: src instanceof Function ? await src() :
+				src instanceof File ? await getThumbnailFromFile(src) :
+					src
 		});
 	}
 	
@@ -41,7 +43,7 @@ class Image extends Component {
 		if (this.props.src !== props.src) {
 			let {src} = this.props,
 				setState = promiseSetState(this);
-			console.log(typeof src);
+			
 			if (typeof src === 'string' || src === null)
 				return await setState({src: this.props.src, imageState: IMAGE_LOAD});
 			else if (src instanceof File)

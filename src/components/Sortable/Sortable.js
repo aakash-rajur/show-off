@@ -10,12 +10,12 @@ const ProjectItem = SortableElement(props => {
 	let {
 		className,
 		name, coverFile,
-		description,
+		description, files,
 		onEdit, onDelete
 	} = props;
 	return (
 		<li className={className}>
-			<Image src={coverFile} alt={name}/>
+			<Image src={files ? files.coverFile : coverFile} alt={name}/>
 			<div>{name}</div>
 			<pre>{description}</pre>
 			<Icon name='delete' onClick={onDelete} className='delete'/>
@@ -28,7 +28,7 @@ const ProjectItem = SortableElement(props => {
 ProjectItem.propTypes = {
 	className: PropTypes.string,
 	name: PropTypes.string,
-	getThumbnail: PropTypes.func,
+	coverFile: PropTypes.string,
 	onEdit: PropTypes.func,
 	onDelete: PropTypes.func
 };

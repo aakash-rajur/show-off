@@ -102,11 +102,21 @@ class Edit extends Component {
 	}
 	
 	async onAdd() {
-		console.log(await this.editInfo(null));
+		if (await this.editInfo(null)) {
+			let {data, edit} = this.state;
+			data.portfolio = [...data.portfolio, edit];
+			this.setState({data, edit: null});
+		}
 	}
 	
-	onEdit(index) {
-		alert(`edit ${index}`);
+	async onEdit(index) {
+		let {data} = this.state;
+		if (!data || !data.portfolio || !data.portfolio.length || data.portfolio.length < index) return;
+		if (await this.editInfo(data.portfolio[index])) {
+			let {data, edit} = this.state;
+			data.portfolio[index] = edit;
+			this.setState({data, edit: null});
+		}
 	}
 	
 	onDelete(index) {
@@ -133,7 +143,7 @@ class Edit extends Component {
 					return async e => {
 						e.preventDefault();
 						await setState({renderModal: null});
-						resolve('hello world');
+						resolve(submit);
 					}
 				}, edit = {...data};
 			await setState({edit});
@@ -156,11 +166,13 @@ class Edit extends Component {
 										<ReactPlayer width='28vh' height='20vh' url={edit.video} controls={true}/> :
 										<Icon name='movie'/>}
 								</Input>
-								<Input type='file' accept=".jpg, .jpeg, .png" required
-								       id='coverFile' name='coverFile' value={edit.coverFile}
+								<Input type='file' accept=".jpg, .jpeg, .png"
+								       id='coverFile' name='coverFile' value={edit.files ? edit.coverFile : ''}
 								       onChange={this.onChange(edit, 'coverFile', true)}
-								       className={classes.coverFile} placeholder='Select Thumbnail'>
-									<Image alt={edit.name || 'Video Thumbnail'} src={edit && edit.files && edit.files.coverFile}/>
+								       className={classes.coverFile} placeholder='Select Thumbnail'
+								       {...(edit.coverFile ? {} : {required: true})}>
+									<Image alt={edit.name || 'Video Thumbnail'}
+									       src={edit.files ? edit.files.coverFile : edit.coverFile}/>
 								</Input>
 								<Input id="name" value={edit.name} name='name'
 								       title='Project Name' placeholder='Project Name'
