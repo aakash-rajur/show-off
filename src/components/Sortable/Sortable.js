@@ -6,6 +6,11 @@ import Image from "../Image/Image";
 
 const DragHandle = SortableHandle(() => <Icon name='drag_handle' className='drag'/>);
 
+// noinspection JSValidateJSDoc
+/**
+ * Each Item represents user Project
+ * @type {React.ComponentClass<*>}
+ */
 const ProjectItem = SortableElement(props => {
 	let {
 		className,
@@ -26,13 +31,33 @@ const ProjectItem = SortableElement(props => {
 });
 
 ProjectItem.propTypes = {
+	/**
+	 * className of the container
+	 */
 	className: PropTypes.string,
+	/**
+	 * name of the project
+	 */
 	name: PropTypes.string,
+	/**
+	 * coverFile URL
+	 */
 	coverFile: PropTypes.string,
+	/**
+	 * callback when user clicks the edit icon
+	 */
 	onEdit: PropTypes.func,
+	/**
+	 * callback when user clicks the delete icon
+	 */
 	onDelete: PropTypes.func
 };
 
+/**
+ * Container component that will animate user drag,
+ * drop and sort
+ * @type {React.ComponentClass<*>}
+ */
 const Sortable = SortableContainer(props => {
 	let {
 			data,
@@ -61,11 +86,29 @@ const Sortable = SortableContainer(props => {
 });
 
 Sortable.propTypes = {
+	/**
+	 * className of the container DOM
+	 */
 	className: PropTypes.string,
+	/**
+	 * data source to render projects
+	 */
 	data: PropTypes.array,
+	/**
+	 * className assigned to each ProjectItem
+	 */
 	itemClassName: PropTypes.string,
+	/**
+	 * callback when user has sorted any project
+	 */
 	onSortEnd: PropTypes.func,
+	/**
+	 * callback when user clicks edit on any of the project
+	 */
 	onEdit: PropTypes.func,
+	/**
+	 * callback when user clicks edit on any of the project
+	 */
 	onDelete: PropTypes.func
 };
 

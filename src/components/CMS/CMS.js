@@ -19,6 +19,9 @@ import Login from "../Login/Login";
 import Progress from "../Progress/Progress";
 import style from './style';
 
+/**
+ * CMS screen
+ */
 class CMS extends Component {
 	state = {
 		user: null,
@@ -39,6 +42,7 @@ class CMS extends Component {
 	}
 	
 	async componentDidMount() {
+		//load the login screen
 		this.setState({
 			renderComponent: () => {
 				let {
@@ -84,13 +88,16 @@ class CMS extends Component {
 			setState = promiseSetState(this);
 		await setState({submitting: true, error: null});
 		try {
+			//attempt sign in
 			let user = await firebase.auth()
 				.signInWithEmailAndPassword(email, password);
 			await setState({user, loading: true});
+			//sign in successful, load user data
 			await setState({
 				data: await getUserData(),
 				loading: false
 			});
+			//allow the user to edit the data
 			await setState({
 				renderComponent: () => {
 					let {
@@ -100,18 +107,31 @@ class CMS extends Component {
 				}
 			})
 		} catch (e) {
+			//show the error message to the user
 			let {message: error} = e;
 			await setState({error});
 		}
 		await setState({submitting: false});
 	}
 	
+	/**
+	 * callback when user wants to save his/her edit. We show an upload dialog
+	 * @param raw: edited data provided by Edit component
+	 * @return {Promise<void>}: resolves when upload is complete
+	 */
 	async editSubmit(raw) {
 		let setState = promiseSetState(this),
 			{files, data} = await processSubmit(raw);
+		
+		
 		await setState({
 			upload: await uploadUserData(progress => {
 				let {upload} = this.state;
+				/**
+				 * if no modal has been show tracking the upload status,
+				 * we show that modal, otherwise we simply update the
+				 * state with latest stats.
+				 */
 				this.setState(!upload ? {
 					upload: progress,
 					renderModal: upload => {
@@ -146,8 +166,14 @@ class CMS extends Component {
 		});
 	}
 	
+	/**
+	 * callback when upload process has been completed and
+	 * the user clicks the OK button
+	 * @return {Promise<void>}
+	 */
 	async onUploadComplete() {
 		let setState = promiseSetState(this);
+		//hide the modal, clear the upload stats and start user data refresh
 		await setState({renderModal: null, upload: null, loading: true});
 		await setState({
 			data: await getUserData(),

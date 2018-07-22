@@ -18,6 +18,9 @@ import {TEXT_FIRST, TEXT_SECOND} from "../TextFlip/style";
 import TextFlip from "../TextFlip/TextFlip";
 import style from './style';
 
+/**
+ * Landing screen
+ */
 class App extends Component {
 	state = {
 		userData: null,
@@ -37,6 +40,7 @@ class App extends Component {
 	
 	async componentDidMount() {
 		let setState = promiseSetState(this);
+		//fetch user data
 		await setState({userData: await getUserData()});
 	}
 	
@@ -80,7 +84,7 @@ class App extends Component {
 						          </Fragment>
 					          )}
 					          renderSecond={selected ? (
-						          <h1 className={classes.emphasis}>
+						          <h1 className={classes.head}>
 							          {selected.project.name}
 						          </h1>
 					          ) : "\u00a0"}/>
@@ -138,6 +142,13 @@ class App extends Component {
 		)
 	}
 	
+	/**
+	 * callback to Portfolio to provide
+	 * tile props.
+	 * @param project: project data of the tile
+	 * @param index: index of that project
+	 * @return {{src: *, alt: *, visible: boolean, animation: null}}: tile props
+	 */
 	onGetTileProps(project, index) {
 		let {
 				coverFile: src, name: alt
@@ -182,6 +193,13 @@ class App extends Component {
 		});
 	}
 	
+	/**
+	 * calculates animation start and end position,
+	 * w.r.t to whether the animation is being
+	 * played forward or backward.
+	 * @param selected
+	 * @return {*}
+	 */
 	generateAnimationChain(selected) {
 		if (!selected) return null;
 		return backward => {
@@ -219,5 +237,3 @@ class App extends Component {
 }
 
 export default injectSheet(style)(App);
-//https://picsum.photos/1920/1080/?random
-//2*window.innerWidth * 0.2 + 16 + 120

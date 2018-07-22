@@ -11,18 +11,52 @@ import style from './style';
 const PLAYER_PLAY = 'PLAY';
 const PLAYER_PAUSE = 'PAUSE';
 
+/**
+ * renders user project in details. Responsible
+ * for animation as well
+ */
 class Project extends Component {
 	static propTypes = {
+		/**
+		 * className of the container
+		 */
 		className: PropTypes.string,
+		/**
+		 * flag if the component needs to be shown
+		 */
 		visible: PropTypes.bool,
+		/**
+		 * project video url
+		 */
 		url: PropTypes.string,
+		/**
+		 * project video thumbnail URL
+		 */
 		thumbnail: PropTypes.oneOfType([
 			PropTypes.func,
 			PropTypes.string
 		]),
+		/**
+		 * description of the project,
+		 * only shown in mobile view
+		 */
 		description: PropTypes.string,
+		/**
+		 * alt of the project video thumbnail
+		 */
 		alt: PropTypes.string,
+		/**
+		 * callback when the user has closed the
+		 * project and the animation is about to
+		 * end
+		 */
 		onProjectClose: PropTypes.func,
+		/**
+		 * callback to retrieve the animation
+		 * start and end state. a boolean is passed
+		 * as a parameter to infer whether the
+		 * animation needs to be played in reverse
+		 */
 		getAnimationChain: PropTypes.func
 	};
 	
@@ -51,6 +85,9 @@ class Project extends Component {
 		} = this.props;
 		if (this.props.url !== props.url) {
 			await setState({animate: true});
+			/**
+			 * show the thumbnail while the player finishes loading
+			 */
 			await promiseSetTimeout(setState, 50, {
 				url: this.props.url,
 				showPlayer: false,
@@ -58,12 +95,16 @@ class Project extends Component {
 			});
 		}
 		if (visible !== props.visible && visible && getAnimationChain) {
+			//fetch the start and end state of the animation
 			let {start, end} = getAnimationChain(false);
+			//apply the animation start state
 			await setState({
 				animate: true,
 				style: start,
 				opacity: 1
 			});
+			//need to wait some time before we can apply the
+			//end state. React be so cool. :)
 			await promiseSetTimeout(setState, 100, {
 				style: end
 			});
@@ -108,6 +149,7 @@ class Project extends Component {
 	}
 	
 	async onPlayerReady() {
+		//fade out the thumbnail
 		let setState = promiseSetState(this);
 		await setState({opacity: 0, showPlayer: true});
 		await promiseSetTimeout(setState, 320, {
@@ -126,15 +168,22 @@ class Project extends Component {
 		} = this.props;
 		await setState({play: false});
 		if (getAnimationChain) {
+			//get the animation start and end state
 			let {start, end} = getAnimationChain(true);
+			//apply the start state
 			await setState({
 				animate: true,
 				style: start,
 				opacity: 1,
 				showPlayer: false
 			});
+			//we notify the listener we're exiting to
+			//synchronise animation in parent
 			onProjectClose && onProjectClose();
+			//apply the end animation, after a few ms
+			//otherwise animation doesn't work, React be so cool :)
 			await promiseSetTimeout(setState, 50, {style: end});
+			//hide the dom responsible for animation
 			await promiseSetTimeout(setState, 650, {animate: false});
 		}
 	}

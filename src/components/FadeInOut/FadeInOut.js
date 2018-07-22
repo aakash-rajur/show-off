@@ -4,6 +4,7 @@ import injectSheet from 'react-jss';
 import {joinClassName, promiseSetState, promiseSetTimeout} from "../../utils/library";
 import style, {FADE_IN, FADE_OUT} from "./style";
 
+
 const Animated = injectSheet(style)(
 	function ({className, classes, children}) {
 		return (
@@ -27,13 +28,37 @@ Animated.defaultProps = {
 	duration: '0.7s'
 };
 
+/**
+ * component choreographs the fade-in
+ * and fade-out animation
+ */
 class FadeInOut extends Component {
 	static propTypes = {
+		/**
+		 * bool to show or hide the component with animation
+		 */
 		visible: PropTypes.bool,
+		/**
+		 * className applied to the container
+		 */
 		className: PropTypes.string,
+		/**
+		 * display css value when the dom needs to be shown.
+		 * applying a display to given className will override
+		 * the animation and break it
+		 */
 		display: PropTypes.string,
+		/**
+		 * duration of the fade
+		 */
 		duration: PropTypes.string,
+		/**
+		 * skip the fade-in animation
+		 */
 		skipEnter: PropTypes.bool,
+		/**
+		 * skip the fade-out animation
+		 */
 		skipExit: PropTypes.bool
 	};
 	
@@ -58,13 +83,15 @@ class FadeInOut extends Component {
 					visible
 				} = this.props,
 				setState = promiseSetState(this);
-			if (!skipEnter && visible) {
+			if (visible) {
+				if (skipEnter) return await setState({animate: null, visible: true});
 				await setState({visible: true});
-				return await promiseSetTimeout(setState, 2, {animate: FADE_IN});
+				await promiseSetTimeout(setState, 2, {animate: FADE_IN});
+			} else {
+				if (skipExit) return await setState({animate: null, visible: false});
+				await setState({animate: FADE_OUT});
+				await promiseSetTimeout(setState, 720, {visible: false});
 			}
-			if (skipExit) return await setState({animate: FADE_OUT, visible: false});
-			await setState({animate: FADE_OUT});
-			await promiseSetTimeout(setState, 720, {visible: false});
 		}
 	}
 	

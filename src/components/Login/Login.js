@@ -3,6 +3,14 @@ import React from 'react';
 import injectSheet from 'react-jss';
 import style from "./style";
 
+/**
+ * Component that takes in
+ * user credentials to login
+ * to the CMS
+ * @param props
+ * @return {*}
+ * @constructor
+ */
 function Login(props) {
 	let {
 		classes,
@@ -30,8 +38,19 @@ function Login(props) {
 }
 
 Login.propTypes = {
+	/**
+	 * callback when user submits
+	 * the form
+	 */
 	onSubmit: PropTypes.func,
+	/**
+	 * flag that disables form submit
+	 */
 	disabled: PropTypes.bool,
+	/**
+	 * any error string that needs to be
+	 * displayed
+	 */
 	error: PropTypes.string
 };
 

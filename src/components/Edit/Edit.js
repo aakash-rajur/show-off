@@ -11,9 +11,19 @@ import Input from "../Input/Input";
 import Sortable from "../Sortable/Sortable";
 import style from "./style";
 
+/**
+ * Component to render relevant fields
+ * to edit user data
+ */
 class Edit extends Component {
 	static propTypes = {
+		/**
+		 * user data
+		 */
 		data: PropTypes.object,
+		/**
+		 * callback when the user submits the form
+		 */
 		onSubmit: PropTypes.func
 	};
 	
@@ -26,8 +36,11 @@ class Edit extends Component {
 		this.onReset = this.onReset.bind(this);
 		this.onSave = this.onSave.bind(this);
 		this.state = {
+			//we're making a copy of the user data allowing us to reset it
 			data: JSON.parse(JSON.stringify(props.data)),
+			//function that will render the modal
 			renderModal: null,
+			//storing temporary user edits
 			edit: null
 		};
 	}
@@ -83,13 +96,22 @@ class Edit extends Component {
 		);
 	}
 	
-	onChange(object, path, isFile = false) {
+	/**
+	 * onChange function generator that will listen
+	 * to the provided field and mutate that state
+	 * accordingly
+	 * @param object: the object whose property needs to mutated
+	 * @param property: the key whose value needs to be mutated
+	 * @param isFile: flag if the value is a file
+	 * @return {Function} a function that'll listen to input's change
+	 */
+	onChange(object, property, isFile = false) {
 		return ({target: {value, files}}) => {
-			object[path] = value;
+			object[property] = value;
 			if (isFile) {
 				object.files = {
 					...(object.files || {}),
-					[path]: files[0]
+					[property]: files[0]
 				}
 			}
 			let {data, edit} = this.state;
@@ -97,44 +119,78 @@ class Edit extends Component {
 		}
 	}
 	
+	/**
+	 * function callback to Sortable component.
+	 * changes the index of the freshly moved
+	 * project
+	 * @param oldIndex: Project's old index
+	 * @param newIndex: Project's new index
+	 */
 	onSortEnd({oldIndex, newIndex}) {
 		let {data} = this.state;
 		data.portfolio = arrayMove(data.portfolio, oldIndex, newIndex);
 		this.setState({data});
 	}
 	
+	/**
+	 * callback when user wants to add new project
+	 * @return {Promise<void>}
+	 */
 	async onAdd() {
 		if (await this.editInfo(null)) {
 			let {data, edit} = this.state;
+			//append the new object to user's portfolio array
 			data.portfolio = [...data.portfolio, edit];
 			this.setState({data, edit: null});
 		}
 	}
 	
+	/**
+	 * callback when user has saved the edited project
+	 * @param index: index of the edited project
+	 * @return {Promise<void>}
+	 */
 	async onEdit(index) {
 		let {data} = this.state;
+		//don't invoke the modal if the index is not valid
 		if (!data || !data.portfolio || !data.portfolio.length || data.portfolio.length < index) return;
+		//show the edit modal and wait until user saves the changes
 		if (await this.editInfo(data.portfolio[index])) {
 			let {data, edit} = this.state;
+			//save the user edit to the relevant index
 			data.portfolio[index] = edit;
 			this.setState({data, edit: null});
 		}
 	}
 	
+	/**
+	 * callback when user want's to delete any of the project
+	 * @param index
+	 */
 	onDelete(index) {
 		let {data} = this.state;
 		data.portfolio.splice(index, 1);
 		this.setState({data});
 	}
 	
+	/**
+	 * callback to reset user edits
+	 * @param e
+	 */
 	onReset(e) {
 		e.preventDefault();
 		let {data} = this.props;
 		this.setState({data: JSON.parse(JSON.stringify(data))});
 	}
 	
-	editInfo(data) {
-		if (!data) data = {
+	/**
+	 * common function that invokes the modal to add a
+	 * new project or edit an existing one
+	 * @param project: the project to edit, null if new
+	 * @return {Promise<any>}: resolves with a bool if action was successful
+	 */
+	editInfo(project) {
+		if (!project) project = {
 			name: '',
 			description: '',
 			video: '',
@@ -146,9 +202,10 @@ class Edit extends Component {
 					return async e => {
 						e.preventDefault();
 						await setState({renderModal: null});
+						//resolve now since the modal has been closed
 						resolve(submit);
 					}
-				}, edit = {...data};
+				}, edit = {...project};
 			await setState({edit});
 			
 			await setState({

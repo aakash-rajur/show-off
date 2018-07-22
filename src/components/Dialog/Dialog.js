@@ -2,6 +2,13 @@ import PropTypes from 'prop-types'
 import React from 'react';
 import FadeInOut from "../FadeInOut/FadeInOut";
 
+/**
+ * Component abstracts over FadeInOut
+ * to act as a modal
+ * @param props
+ * @return {*}
+ * @constructor
+ */
 function Dialog(props) {
 	let {
 		className,
@@ -18,8 +25,17 @@ function Dialog(props) {
 }
 
 Dialog.propTypes = {
+	/**
+	 * flag to open or close the modal
+	 */
 	open: PropTypes.bool,
+	/**
+	 * className applied to the container class
+	 */
 	className: PropTypes.string,
+	/**
+	 * duration of the animation
+	 */
 	duration: PropTypes.string
 };
 

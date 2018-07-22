@@ -4,6 +4,10 @@ import injectSheet from 'react-jss';
 import {joinClassName} from "../../utils/library";
 import style, {TEXT_FIRST, TEXT_SECOND} from "./style";
 
+/**
+ * Component that will animate view change
+ * with an translation animation
+ */
 function TextFlip(props) {
 	let {
 		classes,
@@ -20,19 +24,36 @@ function TextFlip(props) {
 }
 
 TextFlip.propTypes = {
+	/**
+	 * container className
+	 */
 	className: PropTypes.string,
+	/**
+	 * first view that has to be shown
+	 */
 	renderFirst: PropTypes.oneOfType([
 		PropTypes.string,
 		PropTypes.object
 	]),
+	/**
+	 * second view that has to be shown
+	 */
 	renderSecond: PropTypes.oneOfType([
 		PropTypes.string,
 		PropTypes.object
 	]),
+	/**
+	 * flag that determines which view to
+	 * show on the DOM. DEFAULT: TEXT_FIRST
+	 */
 	current: PropTypes.oneOf([
 		TEXT_FIRST,
 		TEXT_SECOND
 	]),
+	/**
+	 * translation animation vector.
+	 * DEFAULT: 10px
+	 */
 	vector: PropTypes.string
 };
 

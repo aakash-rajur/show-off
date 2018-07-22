@@ -4,7 +4,6 @@ export default {
 	'@global': {
 		'@import': [
 			'https://fonts.googleapis.com/css?family=Open+Sans:300,400,700',
-			'https://fonts.googleapis.com/css?family=Montserrat:400,700',
 			'https://fonts.googleapis.com/icon?family=Material+Icons'
 		],
 		html: {
@@ -106,6 +105,10 @@ export default {
 	project: {
 		padding: `30px 40px 30px 80px`
 	},
+	head: {
+		extend: 'emphasis',
+		fontSize: '1.5em'
+	},
 	icon: {
 		width: 28, height: 28,
 		'& img': {
@@ -193,7 +196,8 @@ export default {
 				position: 'absolute',
 				left: 0,
 				color: 'black',
-				content: "'|'"
+				content: "'|'",
+				fontStyle: 'initial'
 			}
 		},
 		animationLocation: {

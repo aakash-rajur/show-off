@@ -10,19 +10,51 @@ const IMAGE_LOAD = 'IMAGE_LOAD';
 const IMAGE_LOADED = 'IMAGE_LOADED';
 const IMAGE_ERRORED = 'IMAGE_ERRORED';
 
+/**
+ * component animates the image
+ * after it is successfully loaded
+ * and shows a better alt instead
+ * of the native one as a cloak
+ */
 class Image extends Component {
 	static propTypes = {
+		/**
+		 * src of the image. can be a string,
+		 * any async function returning a string
+		 * or File object
+		 */
 		src: PropTypes.oneOfType([
 			PropTypes.string,
 			PropTypes.func,
 			PropTypes.object,
 		]),
+		/**
+		 * alt of the image
+		 */
 		alt: PropTypes.string,
+		/**
+		 * title of the image to show the tooltip
+		 */
 		title: PropTypes.string,
+		/**
+		 * className applied to the image
+		 */
 		className: PropTypes.string,
+		/**
+		 * className applied to the cloak
+		 */
 		cloakClassName: PropTypes.string,
+		/**
+		 * className applied to the container
+		 */
 		containerClassName: PropTypes.string,
+		/**
+		 * ref callback to the image
+		 */
 		dom: PropTypes.func,
+		/**
+		 * callback when the image is clicked
+		 */
 		onClick: PropTypes.func
 	};
 	
