@@ -124,7 +124,7 @@ class App extends Component {
 	
 	onGetTileProps(project, index) {
 		let {
-				getThumbnail: src, name: alt
+				coverFile: src, name: alt
 			} = project, {
 				selected,
 				portfolioAnimation

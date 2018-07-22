@@ -1,12 +1,22 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
+import 'firebase/storage';
 import React, {Component, Fragment} from 'react';
 import injectSheet from 'react-jss';
-import {getUserData, joinClassName, promiseSetState} from "../../utils/library";
+import {
+	bytesToSize,
+	getUserData,
+	joinClassName,
+	processSubmit,
+	promiseSetState,
+	uploadUserData
+} from "../../utils/library";
+import Dialog from "../Dialog/Dialog";
 import Edit from "../Edit/Edit";
 import Image from "../Image/Image";
 import Loading from "../Loading/Loading";
 import Login from "../Login/Login";
+import Progress from "../Progress/Progress";
 import style from './style';
 
 class CMS extends Component {
@@ -16,13 +26,16 @@ class CMS extends Component {
 		error: null,
 		renderComponent: null,
 		loading: false,
-		data: null
+		data: null,
+		renderModal: null,
+		upload: null
 	};
 	
 	constructor(props) {
 		super(props);
 		this.loginSubmit = this.loginSubmit.bind(this);
 		this.editSubmit = this.editSubmit.bind(this);
+		this.onUploadComplete = this.onUploadComplete.bind(this);
 	}
 	
 	async componentDidMount() {
@@ -35,32 +48,15 @@ class CMS extends Component {
 				return <Login onSubmit={this.loginSubmit} error={error} disabled={submitting}/>
 			}
 		});
-		/*let setState = promiseSetState(this),
-			data = await getUserData(),
-			{portfolio} = data;
-		data.portfolio = await Promise.all(portfolio.map(async project => {
-			await project.getThumbnail();
-			return project;
-		}));
-		await setState({
-			data, loading: false
-		});
-		await setState({
-			renderComponent: () => {
-				let {
-					data
-				} = this.state;
-				return <Edit data={data} onSubmit={this.editSubmit}/>
-			}
-		})*/
 	}
 	
 	render() {
 		let {
 			classes
 		} = this.props, {
+			loading,
 			renderComponent, user,
-			loading
+			renderModal, upload
 		} = this.state;
 		return (
 			<Fragment>
@@ -69,6 +65,10 @@ class CMS extends Component {
 				       cloakClassName={classes.backgroundCloak}
 				       src="https://picsum.photos/1920/1080/?random" alt="background"/>
 				{renderComponent && renderComponent()}
+				<Dialog open={Boolean(renderModal)}
+				        duration='0.3s' className={classes.modal}>
+					{renderModal && renderModal(upload)}
+				</Dialog>
 				<Loading visible={loading}/>
 			</Fragment>
 		);
@@ -87,14 +87,9 @@ class CMS extends Component {
 			let user = await firebase.auth()
 				.signInWithEmailAndPassword(email, password);
 			await setState({user, loading: true});
-			let data = await getUserData(),
-				{portfolio} = data;
-			data.portfolio = await Promise.all(portfolio.map(async project => {
-				await project.getThumbnail();
-				return project;
-			}));
 			await setState({
-				data, loading: false
+				data: await getUserData(),
+				loading: false
 			});
 			await setState({
 				renderComponent: () => {
@@ -111,8 +106,53 @@ class CMS extends Component {
 		await setState({submitting: false});
 	}
 	
-	async editSubmit(e) {
-		e.preventDefault();
+	async editSubmit(raw) {
+		let setState = promiseSetState(this),
+			{files, data} = await processSubmit(raw);
+		await setState({
+			upload: await uploadUserData(progress => {
+				let {upload} = this.state;
+				this.setState(!upload ? {
+					upload: progress,
+					renderModal: upload => {
+						let {classes} = this.props,
+							{uploadedBytes, totalBytes, succeeded, failed, total} = upload;
+						return (
+							<div className={classes.dialog}>
+								<h2 className={classes.title}>Uploading</h2>
+								<pre className={classes.info}>
+									<div>
+										<span className="success">{bytesToSize(uploadedBytes)}</span>/
+										<span className="total">{bytesToSize(totalBytes)}</span>
+									</div>
+									<div>
+										<span className="success">{succeeded} ✓</span>/
+										<span className="fail">{failed} ✘</span> out of
+										<span className="total"> {total} Files</span>
+									</div>
+								</pre>
+								<Progress className={classes.progress} color='#28a745'
+								          progress={(succeeded + failed) / total}/>
+								<button className={classes.ok}
+								        disabled={(succeeded + failed) !== total}
+								        onClick={this.onUploadComplete}>
+									OK
+								</button>
+							</div>
+						);
+					}
+				} : {upload: progress});
+			}, data, ...files)
+		});
+	}
+	
+	async onUploadComplete() {
+		let setState = promiseSetState(this);
+		await setState({renderModal: null, upload: null, loading: true});
+		await setState({
+			data: await getUserData(),
+			loading: false
+		});
 	}
 }
 

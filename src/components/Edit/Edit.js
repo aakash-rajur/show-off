@@ -24,6 +24,7 @@ class Edit extends Component {
 		this.onEdit = this.onEdit.bind(this);
 		this.onDelete = this.onDelete.bind(this);
 		this.onReset = this.onReset.bind(this);
+		this.onSave = this.onSave.bind(this);
 		this.state = {
 			data: JSON.parse(JSON.stringify(props.data)),
 			renderModal: null,
@@ -43,7 +44,8 @@ class Edit extends Component {
 		} = this.state;
 		return (
 			<Fragment>
-				<div className={classes.container}>
+				<form className={classes.container}
+				      onSubmit={this.onSave}>
 					<section className={classes.personal}>
 						<h1>Personal</h1>
 						<Input id="client" value={name} title='Name' placeholder='Name'
@@ -68,11 +70,11 @@ class Edit extends Component {
 						        onClick={this.onReset}>
 							Reset
 						</button>
-						<button className={classes.save}>
+						<button className={classes.save} type='submit'>
 							Save
 						</button>
 					</div>
-				</div>
+				</form>
 				<Dialog open={Boolean(renderModal)}
 				        duration='0.3s' className={classes.modal}>
 					{renderModal && renderModal(edit)}
@@ -197,6 +199,13 @@ class Edit extends Component {
 				}
 			});
 		});
+	}
+	
+	onSave(e) {
+		e.preventDefault();
+		let {onSubmit} = this.props,
+			{data} = this.state;
+		onSubmit && onSubmit(data);
 	}
 }
 

@@ -4,18 +4,23 @@ export default {
 	'@global': {
 		'@import': [
 			'https://fonts.googleapis.com/css?family=Open+Sans:300,400,700',
+			'https://fonts.googleapis.com/css?family=Montserrat:400,700',
 			'https://fonts.googleapis.com/icon?family=Material+Icons'
 		],
-		'html': {
+		html: {
 			height: '100vh',
 			fontFamily: `'Open Sans', sans-serif`
 		},
-		'body': {
+		body: {
 			height: '100%',
 			margin: 0,
 			'& #root': {
 				height: '100%'
 			}
+		},
+		'pre, textarea': {
+			fontFamily: "monospace, sans-serif",
+			fontSize: '13px'
 		},
 		'::-webkit-scrollbar': {
 			width: 0,
