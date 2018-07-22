@@ -18,6 +18,7 @@ class Image extends Component {
 			PropTypes.object,
 		]),
 		alt: PropTypes.string,
+		title: PropTypes.string,
 		className: PropTypes.string,
 		cloakClassName: PropTypes.string,
 		containerClassName: PropTypes.string,
@@ -60,14 +61,14 @@ class Image extends Component {
 			classes, alt,
 			className, dom,
 			containerClassName,
-			onClick
+			onClick, title
 		} = this.props, {
 			src, imageState
 		} = this.state;
 		return (
 			<div className={joinClassName(classes.container, containerClassName)}
 			     onClick={onClick}>
-				<img src={src} alt={alt} ref={dom}
+				<img src={src} alt={alt} ref={dom} title={title}
 				     className={joinClassName(classes.image,
 					     imageState !== IMAGE_LOADED && classes.hidden,
 					     className)}

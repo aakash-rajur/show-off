@@ -12,7 +12,7 @@ const Tile = injectSheet(tileStyle)(
 			       containerClassName={classes.tile}
 			       cloakClassName={classes.image}
 			       src={src} alt={alt} dom={dom}
-			       onClick={onClick}/>
+			       onClick={onClick} title={alt}/>
 		)
 	}
 );
