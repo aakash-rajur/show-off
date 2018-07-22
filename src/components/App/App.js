@@ -1,6 +1,14 @@
 import React, {Component, Fragment} from 'react';
 import injectSheet from 'react-jss';
-import {getFacebookProfile, getUserData, joinClassName, promiseSetState, promiseSetTimeout} from "../../utils/library";
+import {
+	getFacebookProfile,
+	getUserData,
+	joinClassName,
+	promiseSetState,
+	promiseSetTimeout,
+	SHARE_TEMPLATE
+} from "../../utils/library";
+import FadeInOut from "../FadeInOut/FadeInOut";
 import Image from "../Image/Image";
 import Loading from "../Loading/Loading";
 import Portfolio from "../Portfolio/Portfolio";
@@ -67,8 +75,8 @@ class App extends Component {
 					<TextFlip current={info} vector={'1.5em'}
 					          renderFirst={(
 						          <Fragment>
-							          <h2 className={classes.emphasis}>{title}</h2>
-							          <h1 className={classes.emphasis}>{name}</h1>
+							          <h2 className={classes.title}>{title}</h2>
+							          <h1 className={classes.name}>{name}</h1>
 						          </Fragment>
 					          )}
 					          renderSecond={selected ? (
@@ -82,6 +90,14 @@ class App extends Component {
 						          <pre>{selected.project.description}</pre>
 					          ) : "\u00a0"}
 					          vector={'1.5em'}/>
+					<FadeInOut className={classes.share} display='grid'
+					           duration='0.3s' visible={!Boolean(selected)}>
+						{SHARE_TEMPLATE.map(({href, icon, alt}) => (
+							<a key={alt} href={href} className={classes.icon} target='_blank'>
+								<img src={icon} alt={alt}/>
+							</a>
+						))}
+					</FadeInOut>
 				</div>
 			</div>
 		)
@@ -179,7 +195,7 @@ class App extends Component {
 				vTop = 478.5 - 9 / 32 * (innerWidth * 0.4);
 			if (innerWidth <= 600) {
 				vLeft = innerWidth * 0.1;
-				vTop = 0.5 * innerWidth * 0.8 + 106;
+				vTop = 0.5 * innerWidth * 0.8 + 30;
 			} else if (innerWidth <= 1024) {
 				vLeft = innerWidth * 0.45 + 80;
 			}

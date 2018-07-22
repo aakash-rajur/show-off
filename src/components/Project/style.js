@@ -53,7 +53,7 @@ export default {
 		container: {
 			gridTemplate: `1fr/${4 * MIN_TILE_SIZE}vw`,
 			justifyContent: 'center',
-			height: 'calc(100vh - 76px)'
+			height: '100%'
 		},
 		videoWrapper: {
 			alignSelf: 'initial',
@@ -62,7 +62,10 @@ export default {
 			gridColumn: '1',
 		},
 		description: {
-			display: 'initial'
+			display: 'initial',
+			'& pre': {
+				fontSize: '1em'
+			}
 		}
 	}
 }

@@ -1,6 +1,9 @@
 import firebase from 'firebase/app';
 import 'firebase/storage';
 import {Component} from 'react';
+import FACEBOOK_ICON from '../assets/facebook.svg';
+import GMAIL_ICON from '../assets/gmail.svg';
+import INSTAGRAM_ICON from '../assets/instagram.svg';
 import {FACEBOOK_ID, PORTFOLIO_REF} from "./config";
 
 export const MIN_TILE_SIZE = 20;
@@ -183,3 +186,17 @@ export function uploadUserData(onUpdate, data, ...files) {
 		resolve({uploadedBytes, totalBytes, succeeded, failed, total});
 	});
 }
+
+export const SHARE_TEMPLATE = [{
+	href: 'mailto:sharmadhiraj21@gmail.com?subject=Enquiry',
+	icon: GMAIL_ICON,
+	alt: 'Mail'
+}, {
+	href: 'https://www.facebook.com/sharmadhiraj21',
+	icon: FACEBOOK_ICON,
+	alt: 'Facebook'
+}, {
+	href: 'https://www.instagram.com/idhirajsharma/',
+	icon: INSTAGRAM_ICON,
+	alt: 'Instagram'
+}];
