@@ -127,7 +127,8 @@ class Edit extends Component {
 		this.setState({data});
 	}
 	
-	onReset() {
+	onReset(e) {
+		e.preventDefault();
 		let {data} = this.props;
 		this.setState({data: JSON.parse(JSON.stringify(data))});
 	}
