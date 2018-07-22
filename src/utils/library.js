@@ -103,12 +103,24 @@ export function getFacebookProfile() {
 	return `http://graph.facebook.com/${FACEBOOK_ID}/picture?type=large&width=512&height=512&redirect=true`
 }
 
+/**
+ * responsible to fetch user's data
+ * @return {Promise<any>} resolves into user's data parsed
+ */
 export async function getUserData() {
 	let portfolioRef = await firebase.storage()
 		.ref(PORTFOLIO_REF).getDownloadURL();
 	return await (await fetch(portfolioRef)).json();
 }
 
+/**
+ * responsible to process user edits, before
+ * uploading to the firebase server.
+ * @param data: object holding user edits
+ * @return {Promise<{files: Array, data: *}>}:
+ * resolves into files extracted and properly
+ * replaced with their respective refs
+ */
 export async function processSubmit(data) {
 	let extracted = [], {portfolio} = data;
 	for (let i = 0, iL = portfolio.length; i < iL; i++) {
@@ -118,6 +130,13 @@ export async function processSubmit(data) {
 			files
 		} = portfolio[i];
 		portfolio[i] = {name, description, video};
+		
+		/**
+		 * the portfolio.json only needs name, description,
+		 * video and coverFile. we extract files from the
+		 * object and make sure each project object has
+		 * only those key-value pairs
+		 */
 		if (files) {
 			let hash = await sha256(files.coverFile.name);
 			extracted.push({
@@ -132,17 +151,29 @@ export async function processSubmit(data) {
 	};
 }
 
+/**
+ * uploads user edits and thumbnails to the
+ * firebase server
+ * @param onUpdate: callback that receives update info
+ * @param data: processed user edit data
+ * @param files: array of thumbnail that need to be uploaded
+ * @return {Promise<{uploadedBytes, totalBytes, succeeded, failed, total}>}
+ * resolves after the entire upload
+ * process completes, even if any of the upload had failed
+ */
 export function uploadUserData(onUpdate, data, ...files) {
 	return new Promise(async resolve => {
 		
+		//we're tracking failed, successful and total uploads
+		//along with total bytes and uploaded bytes
 		let {length: total} = files, failed = 0, succeeded = 0,
 			totalBytes = 0, uploadedBytes = 0,
 			bucket = firebase.storage().ref(),
 			{portfolio} = data,
 			
-			uploadImage = index => {
+			uploadImage = fileObject => {
 				return new Promise(async resolve => {
-					let {ref, file} = files[index];
+					let {ref, file} = fileObject;
 					
 					totalBytes += file.size;
 					onUpdate && onUpdate({uploadedBytes, totalBytes, succeeded, failed, total});
@@ -158,6 +189,8 @@ export function uploadUserData(onUpdate, data, ...files) {
 						uploadedBytes += file.size;
 						++succeeded;
 						onUpdate && onUpdate({uploadedBytes, totalBytes, succeeded, failed, total});
+						
+						//we fetch the thumbnail URL from firebase and set it in the project object
 						let project = portfolio.find(({coverFile}) => coverFile === ref);
 						if (project) project.coverFile = await uploader.snapshot.ref.getDownloadURL();
 						resolve();
@@ -166,8 +199,10 @@ export function uploadUserData(onUpdate, data, ...files) {
 			};
 		total += 1;
 		
-		for (let i = 0, iL = files.length; i < iL; i++) await uploadImage(i);
+		//wait until all thumbnails have been uploaded
+		await Promise.all(files.map(uploadImage));
 		
+		//now upload the final user object as a JSON file
 		let meta = JSON.stringify(data);
 		totalBytes += meta.length;
 		onUpdate && onUpdate({uploadedBytes, totalBytes, succeeded, failed, total});
@@ -183,6 +218,7 @@ export function uploadUserData(onUpdate, data, ...files) {
 			console.error(e);
 			failed += 1;
 		}
+		//all done!!!
 		resolve({uploadedBytes, totalBytes, succeeded, failed, total});
 	});
 }
