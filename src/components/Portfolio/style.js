@@ -117,7 +117,7 @@ export default {
 		width: 'fit-content',
 		height: '100%',
 		display: 'grid',
-		gridTemplate: `minmax(${MIN_TILE_SIZE / 2}vw, 150px)/repeat(2, minmax(${MIN_TILE_SIZE}vw, 300px))`,
+		gridTemplate: `minmax(${MIN_TILE_SIZE / 2}vw, 150px)/repeat(2, auto)`,
 		justifyItems: 'center',
 		justifyContent: 'center',
 		alignItems: 'center',
