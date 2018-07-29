@@ -213,6 +213,9 @@ export default {
 			padding: '30px 20px',
 			width: 'initial',
 		},
+		head: {
+			fontSize: '0.9em'
+		},
 		share: {
 			position: 'fixed',
 			background: 'white',
