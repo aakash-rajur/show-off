@@ -205,7 +205,8 @@ class Edit extends Component {
 						//resolve now since the modal has been closed
 						resolve(submit);
 					}
-				}, edit = {...project};
+				}, edit = {...project, coverFile: ''};
+			
 			await setState({edit});
 			
 			await setState({
@@ -227,7 +228,7 @@ class Edit extends Component {
 										<Icon name='movie'/>}
 								</Input>
 								<Input type='file' accept=".jpg, .jpeg, .png"
-								       id='coverFile' name='coverFile' value={edit.files ? edit.coverFile : ''}
+								       id='coverFile' name='coverFile' value={edit.coverFile}
 								       onChange={this.onChange(edit, 'coverFile', true)}
 								       className={classes.coverFile} placeholder='Select Thumbnail'
 								       {...(edit.coverFile ? {} : {required: true})}>
