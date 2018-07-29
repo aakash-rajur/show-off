@@ -211,11 +211,9 @@ class App extends Component {
 				{innerHeight, innerWidth} = window,
 				vLeft = innerWidth * 0.45 + 80,
 				vTop = (innerHeight / 2) - 9 / 32 * (innerWidth * 0.4);
-			//803=>400
-			//957=>478.5
 			if (innerWidth <= 600) {
 				vLeft = innerWidth * 0.1;
-				vTop = 0.5 * innerWidth * 0.8 + 30;
+				vTop = 0.7 * innerWidth * 0.8 + 30;
 			} else if (innerWidth <= 1024) {
 				vLeft = innerWidth * 0.45 + 80;
 			}

@@ -57,7 +57,7 @@ export default {
 		},
 		videoWrapper: {
 			alignSelf: 'initial',
-			marginTop: '50%',
+			marginTop: '70%',
 			gridRow: '1',
 			gridColumn: '1',
 		},
