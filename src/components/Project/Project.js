@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import injectSheet from 'react-jss';
 import ReactPlayer from 'react-player';
+import {ANIMATION_DELAY} from "../../utils/config";
 import {joinClassName, promiseSetState, promiseSetTimeout} from "../../utils/library";
 import AnimatedThumbnail from "../AnimatedThumbnail/AnimatedThumbnail";
 import FadeInOut from "../FadeInOut/FadeInOut";
@@ -105,7 +106,7 @@ class Project extends Component {
 			});
 			//need to wait some time before we can apply the
 			//end state. React be so cool. :)
-			await promiseSetTimeout(setState, 100, {
+			await promiseSetTimeout(setState, parseInt(ANIMATION_DELAY, 10), {
 				style: end
 			});
 		}
