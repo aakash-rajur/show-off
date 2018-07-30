@@ -5,4 +5,4 @@ concept implementation ***#4***
 
 <a href="https://medium.muz.li/ui-interactions-of-the-week-52-d946a7b30805" target="_blank">UI Interactions of the week #1</a>
 
-<em><a href="https://dhirajsharma.net" target="_blank">Demo</a></em>
+<em><a href="https://dhiraj-sharma.firebaseapp.com" target="_blank">Demo</a></em>
