@@ -165,6 +165,9 @@ class App extends Component {
 	}
 	
 	async onProjectClick({event: {target}, project, index}) {
+		let {selected}=this.state;
+		if (selected) return;
+		
 		let setState = promiseSetState(this);
 		await setState({
 			selected: {
