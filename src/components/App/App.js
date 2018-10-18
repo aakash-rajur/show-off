@@ -1,5 +1,6 @@
 import React, {Component, Fragment} from 'react';
 import injectSheet from 'react-jss';
+import {ROOT_URL} from "../../utils/config";
 import {
 	getFacebookProfile,
 	getUserData,
@@ -13,7 +14,7 @@ import Image from "../Image/Image";
 import Loading from "../Loading/Loading";
 import Portfolio from "../Portfolio/Portfolio";
 import {ANIMATION_GROW, ANIMATION_SHRINK} from "../Portfolio/style";
-import Project from "../Project/Project";
+import Project, {PROJECT_APPEARING, PROJECT_DISAPPEARING, PROJECT_INVISIBLE, PROJECT_VISIBLE} from "../Project/Project";
 import {TEXT_FIRST, TEXT_SECOND} from "../TextFlip/style";
 import TextFlip from "../TextFlip/TextFlip";
 import style from './style';
@@ -27,12 +28,14 @@ class App extends Component {
 		selected: null,
 		portfolioAnimation: null,
 		transitionAnimation: null,
-		showProject: false,
+		projectState: PROJECT_INVISIBLE,
 		info: TEXT_FIRST
 	};
 	
 	constructor(props) {
 		super(props);
+		this.selectProject = this.selectProject.bind(this);
+		this.unSelectProject = this.unSelectProject.bind(this);
 		this.onProjectClick = this.onProjectClick.bind(this);
 		this.onProjectClose = this.onProjectClose.bind(this);
 		this.onGetTileProps = this.onGetTileProps.bind(this);
@@ -42,6 +45,42 @@ class App extends Component {
 		let setState = promiseSetState(this);
 		//fetch user data
 		await setState({userData: await getUserData()});
+		
+		const {match, history} = this.props,
+			{userData: {portfolio}} = this.state;
+		if (match.params && match.params.project) {
+			const projectIndex = portfolio.findIndex(({route}) => route === match.url);
+			if (projectIndex < 0)
+				return history.replace(ROOT_URL);
+			const project = portfolio[projectIndex],
+				target = document.getElementById('portfolio').children[projectIndex];
+			await setState({
+				projectState: PROJECT_VISIBLE,
+				portfolioAnimation: ANIMATION_SHRINK,
+				info: TEXT_SECOND,
+				selected: {
+					target: target.getBoundingClientRect(),
+					index: projectIndex,
+					project
+				}
+			});
+		}
+	}
+	
+	async componentDidUpdate(prevProps) {
+		const {location} = this.props;
+		if (location !== prevProps.location) {
+			const backward = location.pathname === ROOT_URL,
+				config = backward ? this.state.selected : location.state;
+			if (!config) return;
+			const {
+					target,
+					project,
+					index
+				} = config,
+				animator = backward ? this.unSelectProject : this.selectProject;
+			await animator(target, project, index);
+		}
 	}
 	
 	render() {
@@ -123,7 +162,7 @@ class App extends Component {
 	
 	renderProject() {
 		let {
-				showProject,
+				projectState,
 				selected
 			} = this.state,
 			{classes} = this.props,
@@ -136,7 +175,7 @@ class App extends Component {
 		return (
 			<Project
 				className={joinClassName(classes.animationLocation, classes.project)}
-				visible={showProject} onProjectClose={this.onProjectClose}
+				visible={projectState} onProjectClose={this.onProjectClose}
 				getAnimationChain={this.generateAnimationChain(selected)}
 				{...projectProps}/>
 		)
@@ -164,34 +203,50 @@ class App extends Component {
 		};
 	}
 	
-	async onProjectClick({event: {target}, project, index}) {
-		let {selected}=this.state;
+	async onProjectClick({event: {currentTarget}, project, index}) {
+		const {history} = this.props;
+		history.push(project.route, {
+			target: currentTarget.getBoundingClientRect(),
+			project,
+			index
+		})
+	}
+	
+	async onProjectClose() {
+		const {history} = this.props;
+		history.goBack();
+	}
+	
+	async selectProject(target, project, index) {
+		let {selected} = this.state;
 		if (selected) return;
 		
 		let setState = promiseSetState(this);
 		await setState({
 			selected: {
 				project,
-				target: target.getBoundingClientRect(),
+				target,
 				index
 			}
 		});
 		await setState({
-			showProject: true,
+			projectState: PROJECT_APPEARING,
 			portfolioAnimation: ANIMATION_SHRINK,
 			info: TEXT_SECOND
 		});
+		await promiseSetTimeout(setState, 560, {projectState: PROJECT_VISIBLE});
 	}
 	
-	async onProjectClose() {
+	async unSelectProject() {
 		let setState = promiseSetState(this);
 		await setState({
 			portfolioAnimation: ANIMATION_GROW,
-			info: TEXT_FIRST
+			info: TEXT_FIRST,
+			projectState: PROJECT_DISAPPEARING
 		});
-		await promiseSetTimeout(setState, 660, {
+		await promiseSetTimeout(setState, 680, {
 			selected: null,
-			showProject: false,
+			projectState: PROJECT_INVISIBLE,
 			portfolioAnimation: null,
 		});
 	}

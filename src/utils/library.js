@@ -110,7 +110,12 @@ export function getFacebookProfile() {
 export async function getUserData() {
 	let portfolioRef = await firebase.storage()
 		.ref(PORTFOLIO_REF).getDownloadURL();
-	return await (await fetch(portfolioRef)).json();
+	let data = await (await fetch(portfolioRef)).json();
+	data.portfolio = data.portfolio.map(each => ({
+		...each,
+		route: constructRoute(each.name)
+	}));
+	return data;
 }
 
 /**
@@ -221,6 +226,20 @@ export function uploadUserData(onUpdate, data, ...files) {
 		//all done!!!
 		resolve({uploadedBytes, totalBytes, succeeded, failed, total});
 	});
+}
+
+/**
+ * construct dynamic route with project's name
+ * @param string: the string with which to construct the route
+ * @return {*}: returns lowercase, hyphenated without special character string
+ */
+export function constructRoute(string) {
+	return `/${
+			string.replace(/([\w0-9]+)\s*\W*/gi, (match, $1, offset) => {
+				let start = offset ? '-' : '';
+				return start + $1.toLowerCase()
+			})
+		}`;
 }
 
 export const SHARE_TEMPLATE = [{

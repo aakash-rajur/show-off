@@ -99,7 +99,7 @@ class Image extends Component {
 		} = this.state;
 		return (
 			<div className={joinClassName(classes.container, containerClassName)}
-			     onClick={onClick}>
+			     onClick={imageState === IMAGE_LOADED ? onClick: null}>
 				<img src={src} alt={alt} ref={dom} title={title}
 				     className={joinClassName(classes.image,
 					     imageState !== IMAGE_LOADED && classes.hidden,

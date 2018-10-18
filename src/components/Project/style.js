@@ -1,11 +1,14 @@
 import {MIN_TILE_SIZE} from "../../utils/library";
+import {PROJECT_VISIBLE} from "./Project";
 
 export default {
 	container: {
 		height: '100vh',
+		background: 'white',
 		display: 'grid',
 		gridTemplate: `1fr/${2 * MIN_TILE_SIZE}vw`,
-		boxSizing: 'border-box'
+		boxSizing: 'border-box',
+		zIndex: ({visible}) => visible === PROJECT_VISIBLE ? 2: null
 	},
 	aspectRatio: {
 		height: '100%',

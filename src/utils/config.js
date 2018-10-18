@@ -5,4 +5,5 @@ export const FIREBASE_AUTH_DOMAIN = process.env.REACT_APP_FIREBASE_AUTH_DOMAIN;
 export const ANIMATION_DELAY = process.env.REACT_APP_ANIMATION_DELAY;
 export const PORTFOLIO_REF = 'portfolio.json';
 export const ROOT_URL = '/';
+export const APP_URL = '/:project?';
 export const CMS_URL = '/admin';

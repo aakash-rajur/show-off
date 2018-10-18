@@ -12,6 +12,11 @@ import style from './style';
 const PLAYER_PLAY = 'PLAY';
 const PLAYER_PAUSE = 'PAUSE';
 
+export const PROJECT_APPEARING = 'APPEARING';
+export const PROJECT_VISIBLE = 'VISIBLE';
+export const PROJECT_DISAPPEARING = 'DISAPPEARING';
+export const PROJECT_INVISIBLE = 'INVISIBLE';
+
 /**
  * renders user project in details. Responsible
  * for animation as well
@@ -25,7 +30,12 @@ class Project extends Component {
 		/**
 		 * flag if the component needs to be shown
 		 */
-		visible: PropTypes.bool,
+		visible: PropTypes.oneOf([
+			PROJECT_APPEARING,
+			PROJECT_VISIBLE,
+			PROJECT_DISAPPEARING,
+			PROJECT_INVISIBLE
+		]),
 		/**
 		 * project video url
 		 */
@@ -58,18 +68,22 @@ class Project extends Component {
 		 * as a parameter to infer whether the
 		 * animation needs to be played in reverse
 		 */
-		getAnimationChain: PropTypes.func
+		getAnimationChain: PropTypes.func,
+		/**
+		 * to pop back to root
+		 */
+		history: PropTypes.object,
+		location: PropTypes.object
 	};
 	
 	static defaultProps = {
-		visible: false,
+		visible: PROJECT_INVISIBLE,
 		url: ''
 	};
 	
 	constructor(props) {
 		super(props);
 		this.onPlayerReady = this.onPlayerReady.bind(this);
-		this.onProjectClose = this.onProjectClose.bind(this);
 		this.state = {
 			play: false,
 			url: props.url,
@@ -82,8 +96,10 @@ class Project extends Component {
 	
 	async componentDidUpdate(props) {
 		let setState = promiseSetState(this), {
-			visible, getAnimationChain
+			visible,
+			getAnimationChain
 		} = this.props;
+		
 		if (this.props.url !== props.url) {
 			await setState({animate: true});
 			/**
@@ -95,33 +111,54 @@ class Project extends Component {
 				opacity: 1
 			});
 		}
-		if (visible !== props.visible && visible && getAnimationChain) {
-			//fetch the start and end state of the animation
-			let {start, end} = getAnimationChain(false);
-			//apply the animation start state
-			await setState({
-				animate: true,
-				style: start,
-				opacity: 1
-			});
-			//need to wait some time before we can apply the
-			//end state. React be so cool. :)
-			await promiseSetTimeout(setState, parseInt(ANIMATION_DELAY, 10), {
-				style: end
-			});
+		
+		if (visible !== props.visible && getAnimationChain) {
+			if (visible === PROJECT_APPEARING) {
+				//fetch the start and end state of the animation
+				let {start, end} = getAnimationChain(false);
+				//apply the animation start state
+				await setState({
+					animate: true,
+					style: start,
+					opacity: 1
+				});
+				//need to wait some time before we can apply the
+				//end state. React be so cool. :)
+				await promiseSetTimeout(setState, parseInt(ANIMATION_DELAY, 10), {
+					style: end
+				});
+			} else if (visible === PROJECT_DISAPPEARING) {
+				//stop playing video
+				await setState({play: false});
+				//get the animation start and end state
+				let {start, end} = getAnimationChain(true);
+				//apply the start state
+				await setState({
+					animate: true,
+					style: start,
+					opacity: 1,
+					showPlayer: false
+				});
+				//apply the end animation, after a few ms
+				//otherwise animation doesn't work, React be so cool :)
+				await promiseSetTimeout(setState, 50, {style: end});
+				//hide the dom responsible for animation
+				await promiseSetTimeout(setState, 650, {animate: false});
+			}
 		}
 	}
 	
 	render() {
 		let {
-				classes, className,
-				thumbnail, alt,
-				visible, description
-			} = this.props, {
-				url, play, showPlayer,
-				animate, style, opacity
-			} = this.state;
-		if (!url || !visible) return null;
+			classes, className,
+			thumbnail, alt,
+			visible, description,
+			onProjectClose
+		} = this.props, {
+			url, play, showPlayer,
+			animate, style, opacity
+		} = this.state;
+		if (!url || visible === PROJECT_INVISIBLE) return null;
 		return (
 			<div className={joinClassName(classes.container, className)}>
 				<div className={classes.videoWrapper}>
@@ -138,7 +175,7 @@ class Project extends Component {
 					<FadeInOut
 						display='inline' visible={!animate}
 						duration='0.3s' className={classes.close}>
-						<Icon name='close' onClick={this.onProjectClose}/>
+						<Icon name='close' onClick={onProjectClose}/>
 					</FadeInOut>
 				</div>
 				<FadeInOut visible={!animate} duration='0.3s'
@@ -161,32 +198,6 @@ class Project extends Component {
 	
 	onPlayerChange(state) {
 		return () => this.setState({play: state === PLAYER_PLAY})
-	}
-	
-	async onProjectClose() {
-		let setState = promiseSetState(this), {
-			getAnimationChain, onProjectClose
-		} = this.props;
-		await setState({play: false});
-		if (getAnimationChain) {
-			//get the animation start and end state
-			let {start, end} = getAnimationChain(true);
-			//apply the start state
-			await setState({
-				animate: true,
-				style: start,
-				opacity: 1,
-				showPlayer: false
-			});
-			//we notify the listener we're exiting to
-			//synchronise animation in parent
-			onProjectClose && onProjectClose();
-			//apply the end animation, after a few ms
-			//otherwise animation doesn't work, React be so cool :)
-			await promiseSetTimeout(setState, 50, {style: end});
-			//hide the dom responsible for animation
-			await promiseSetTimeout(setState, 650, {animate: false});
-		}
 	}
 }
 

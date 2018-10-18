@@ -98,7 +98,8 @@ class Portfolio extends Component {
 		} = this.props;
 		return (
 			<div className={joinClassName(classes.container, className)}
-			     onWheel={e => preventScroll && e.preventDefault()}>
+			     onWheel={e => preventScroll && e.preventDefault()}
+			     id='portfolio'>
 				{this.renderTiles()}
 			</div>
 		)
