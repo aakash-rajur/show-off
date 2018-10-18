@@ -238,7 +238,11 @@ class App extends Component {
 	}
 	
 	async onProjectClick({event: {currentTarget}, project, index}) {
-		const {history} = this.props;
+		const {history} = this.props,
+			{selected} = this.state;
+		
+		if (selected) return;
+		
 		history.push(project.route, {
 			target: currentTarget.getBoundingClientRect(),
 			project,
