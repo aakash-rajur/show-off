@@ -1,6 +1,6 @@
 const PROFILE_SIZE = 100;
 
-export default {
+export default  {
 	'@global': {
 		'@import': [
 			'https://fonts.googleapis.com/css?family=Open+Sans:300,400,700',
@@ -148,7 +148,6 @@ export default {
 		},
 		infoWrapper: {
 			padding: '12px 16px',
-			zIndex: 2,
 			position: 'fixed',
 			top: 0,
 			width: '100%'
