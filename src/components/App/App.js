@@ -53,7 +53,7 @@ class App extends Component {
 			if (projectIndex < 0)
 				return history.replace(ROOT_URL);
 			const project = portfolio[projectIndex],
-				target = document.getElementById('portfolio').children[projectIndex];
+				target = document.getElementById('portfolio').children[projectIndex && projectIndex + 1];
 			await setState({
 				projectState: PROJECT_VISIBLE,
 				portfolioAnimation: ANIMATION_SHRINK,
