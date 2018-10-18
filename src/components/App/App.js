@@ -189,7 +189,7 @@ class App extends Component {
 			portfolioAnimation: ANIMATION_GROW,
 			info: TEXT_FIRST
 		});
-		await promiseSetTimeout(setState, 650, {
+		await promiseSetTimeout(setState, 660, {
 			selected: null,
 			showProject: false,
 			portfolioAnimation: null,

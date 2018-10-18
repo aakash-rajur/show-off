@@ -114,13 +114,13 @@ class Project extends Component {
 	
 	render() {
 		let {
-			classes, className,
-			thumbnail, alt,
-			visible, description
-		} = this.props, {
-			url, play, showPlayer,
-			animate, style, opacity
-		} = this.state;
+				classes, className,
+				thumbnail, alt,
+				visible, description
+			} = this.props, {
+				url, play, showPlayer,
+				animate, style, opacity
+			} = this.state;
 		if (!url || !visible) return null;
 		return (
 			<div className={joinClassName(classes.container, className)}>
@@ -131,7 +131,7 @@ class Project extends Component {
 						onPlay={this.onPlayerChange(PLAYER_PLAY)}
 						onPause={this.onPlayerChange(PLAYER_PAUSE)}
 						onReady={this.onPlayerReady}
-						style={{visibility: showPlayer ? 'initial' : 'hidden'}}/>
+						style={{display: showPlayer ? 'initial' : 'none'}}/>
 					<AnimatedThumbnail
 						src={thumbnail} alt={alt} animate={animate}
 						style={style} opacity={opacity}/>
