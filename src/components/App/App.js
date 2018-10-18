@@ -203,20 +203,6 @@ class App extends Component {
 		};
 	}
 	
-	async onProjectClick({event: {currentTarget}, project, index}) {
-		const {history} = this.props;
-		history.push(project.route, {
-			target: currentTarget.getBoundingClientRect(),
-			project,
-			index
-		})
-	}
-	
-	async onProjectClose() {
-		const {history} = this.props;
-		history.goBack();
-	}
-	
 	async selectProject(target, project, index) {
 		let {selected} = this.state;
 		if (selected) return;
@@ -249,6 +235,20 @@ class App extends Component {
 			projectState: PROJECT_INVISIBLE,
 			portfolioAnimation: null,
 		});
+	}
+	
+	async onProjectClick({event: {currentTarget}, project, index}) {
+		const {history} = this.props;
+		history.push(project.route, {
+			target: currentTarget.getBoundingClientRect(),
+			project,
+			index
+		})
+	}
+	
+	async onProjectClose() {
+		const {history} = this.props;
+		history.goBack();
 	}
 	
 	/**
